@@ -1,0 +1,11 @@
+good\service\impl\ProductServiceImpl.class
+good\service\IProductService.class
+good\dao\IUserDao.class
+good\service\impl\UserServiceImpl.class
+good\domain\Product.class
+good\domain\User.class
+good\controller\UserController.class
+good\service\IUserService.class
+good\domain\Permission.class
+good\controller\ProductController.class
+good\dao\IProductDao.class
