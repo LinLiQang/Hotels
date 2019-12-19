@@ -1,6 +1,7 @@
 package good.dao;
 
 import good.domain.Room;
+import good.domain.RoomImg;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface IRoomDao {
      * 添加客房
      * @param room
      */
-    @Insert("insert into room(rid,roomPrice,type,roomStatus) values (#{rid},#{roomPrice},#{type},#{roomStatus})")
+    @Insert("insert into room(rid,introduction,detail,roomPrice,type,roomStatus) values (#{rid},#{introduction},#{detail},#{roomPrice},#{type},#{roomStatus})")
     public void add(Room room);
 
 
@@ -35,7 +36,7 @@ public interface IRoomDao {
      * 更新客房信息
      * @param room
      */
-    @Update("update room set rid = #{rid}, roomPrice = #{roomPrice}, roomStatus = #{roomStatus}, type = #{type} where rid = #{rid}")
+    @Update("update room set rid = #{rid}, introduction = #{introduction}, detail = #{detail}, roomPrice = #{roomPrice}, roomStatus = #{roomStatus}, type = #{type} where rid = #{rid}")
     void updateRoom(Room room);
 
     /**
@@ -44,4 +45,7 @@ public interface IRoomDao {
      */
     @Delete("delete from room where rid = #{id}")
     void deleteRoom(String id);
+
+    @Select("select * from room where type = #{type}")
+    List<Room> findByType(int type);
 }

@@ -103,19 +103,28 @@
                                 <select class="form-control select2" style="width: 100%"
                                         name="ordersStatus">
                                     <c:if test="${orders.ordersStatus == 0}">
-                                        <option value="0" selected="selected">已完成</option>
+                                        <option value="0" selected="selected">已取消</option>
                                         <option value="1">正在进行</option>
-                                        <option value="2">已取消</option>
+                                        <option value="2">已完成</option>
+                                        <option value="3">已评论</option>
                                     </c:if>
-                                    <c:if test="${orders.ordersStatus == 1}">
-                                        <option value="0">已完成</option>
-                                        <option value="1" selected="selected">正在进行</option>
-                                        <option value="2">已取消</option>
-                                    </c:if>
-                                    <c:if test="${orders.ordersStatus == 2}">
-                                        <option value="0">已完成</option>
+                                    <c:if test="${orders.ordersStatus == 0}">
+                                        <option value="0" selected="selected">已取消</option>
                                         <option value="1">正在进行</option>
-                                        <option value="2" selected="selected">已取消</option>
+                                        <option value="2">已完成</option>
+                                        <option value="3">已评论</option>
+                                    </c:if>
+                                    <c:if test="${orders.ordersStatus == 0}">
+                                        <option value="0" selected="selected">已取消</option>
+                                        <option value="1">正在进行</option>
+                                        <option value="2">已完成</option>
+                                        <option value="3">已评论</option>
+                                    </c:if>
+                                    <c:if test="${orders.ordersStatus == 0}">
+                                        <option value="0" selected="selected">已取消</option>
+                                        <option value="1">正在进行</option>
+                                        <option value="2">已完成</option>
+                                        <option value="3">已评论</option>
                                     </c:if>
 
                                 </select>
@@ -247,7 +256,7 @@
         });
 
         $(document).ready(function() {
-            $('#startTime').datetimepicker({
+            $('#startTime').datepicker({
                 format : "yyyy-mm-dd",
                 autoclose : true,
                 todayBtn : true,
@@ -258,13 +267,13 @@
         $(document).ready(function() {
             // 激活导航位置
             setSidebarActive("order-manage");
-            $("#starTime").datetimepicker({
+            $("#starTime").datepicker({
                 format : "yyyy-mm-dd",
             });
         });
 
         $(document).ready(function() {
-            $('#endTime').datetimepicker({
+            $('#endTime').datepicker({
                 format : "yyyy-mm-dd",
                 autoclose : true,
                 todayBtn : true,
@@ -275,7 +284,7 @@
         $(document).ready(function() {
             // 激活导航位置
             setSidebarActive("order-manage");
-            $("#endTime").datetimepicker({
+            $("#endTime").datepicker({
                 format : "yyyy-mm-dd",
             });
         });

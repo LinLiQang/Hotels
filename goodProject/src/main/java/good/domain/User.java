@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String name;            //用户真实姓名
     private String sex;             //用户性别
     private String password;        //用户密码
+    private String avatar;          //用户头像
     private String tel;             //用户手机号
     private int userStatus;         //用户状态 0被封禁 1普通用户 2会员 3管理员
     private String userStatusStr;   //用户状态格式转换
@@ -37,6 +38,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getTel() {
@@ -86,5 +95,20 @@ public class User implements Serializable {
 
     public void setUserStatusStr(String userStatusStr) {
         this.userStatusStr = userStatusStr;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid=" + uid +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", password='" + password + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", tel='" + tel + '\'' +
+                ", userStatus=" + userStatus +
+                ", userStatusStr='" + userStatusStr + '\'' +
+                '}';
     }
 }

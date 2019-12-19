@@ -1,13 +1,14 @@
 package good.dao;
 
 
+import good.domain.Room;
 import good.domain.RoomImg;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 public interface IRoomImgDao {
+
 
     /**
      * 根据rid查找图片的路径
@@ -17,12 +18,24 @@ public interface IRoomImgDao {
     @Select("select * from room_img where rid = #{rid}")
     RoomImg findByRid(String rid);
 
-    @Update("update room_img set firstImg = #{firstImg}, secondImg = #{secondImg}, thirdImg = #{thirdImg} where rid = #{rid}")
+    /**
+     * 修改客房图片信息
+     * @param roomImg
+     */
+    @Update("update room_img set firstImg = #{firstImg}, secondImg = #{secondImg}, thirdImg = #{thirdImg}, forthImg = #{forthImg}, fifthImg = #{fifthImg} where rid = #{rid}")
     void updateRoomImg(RoomImg roomImg);
 
-    @Insert("insert into room_img(rid,firstImg,secondImg,thirdImg) values (#{rid},#{firstImg},#{secondImg},#{thirdImg})")
+    /**
+     * 添加客房图片信息
+     * @param roomImg
+     */
+    @Insert("insert into room_img(rid,firstImg,secondImg,thirdImg,forthImg,fifthImg) values (#{rid},#{firstImg},#{secondImg},#{thirdImg},#{forthImg},#{fifthImg})")
     void add(RoomImg roomImg);
 
+    /**
+     * 根据id删除客房图片信息
+     * @param rid
+     */
     @Delete("delete from room_img where rid = #{rid}")
     void deleteRoomImg(String rid);
 }

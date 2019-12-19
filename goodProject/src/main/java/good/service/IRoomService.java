@@ -20,4 +20,6 @@ public interface IRoomService {
     void deleteRoom(String id);
 
     public List<Room> findAllToOrders();
+
+    List<Room> findByType(int page, int size, int type);
 }

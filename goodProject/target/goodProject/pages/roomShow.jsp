@@ -105,57 +105,83 @@
 						<div class="col-md-2 title">客房状态</div>
 						<div class="col-md-4 data text">${room.roomStatusStr}</div>
 
-						<div class="col-md-2 title">客房图片路径</div>
-						<div class="col-md-4 data text">${roomImg.firstImg} ${roomImg.secondImg} ${roomImg.thirdImg}</div>
+                        <div class="col-md-2 title rowHeight2x">客房简介</div>
+                        <div class="col-md-10 data rowHeight2x">
+                            ${room.introduction}
+                        </div>
 
-						<div class="col-md-2 title"></div>
-						<div class="col-md-4 data text"></div>
+                        <div class="col-md-2 title rowHeight2x">客房描述</div>
+                        <div class="col-md-10 data rowHeight2x">
+                            ${room.detail}
+                        </div>
+
+                        <%--<div class="col-md-2 title">客房状态</div>
+                        <div class="col-md-4 data text">${roomImg.firstImg}</div>
+                        <div class="col-md-2 title">客房状态</div>
+                        <div class="col-md-4 data text">${roomImg.secondImg}</div>
+                        <div class="col-md-2 title">客房状态</div>
+                        <div class="col-md-4 data text">${roomImg.thirdImg}</div>
+                        <div class="col-md-2 title">客房状态</div>
+                        <div class="col-md-4 data text">${roomImg.forthImg}</div>
+                        <div class="col-md-2 title">客房状态</div>
+                        <div class="col-md-4 data text">${roomImg.fifthImg}</div>--%>
+
+						<div class="col-md-2 title rowHeight2x">客房图片路径</div>
+						<div class="col-md-10 data text rowHeight2x">
+                            图片一：${roomImg.firstImg}；
+                            图片二：${roomImg.secondImg}；
+                            图片三：${roomImg.thirdImg}；
+                            图片四：${roomImg.forthImg}；
+                            图片五：${roomImg.fifthImg}</div>
+
+						<%--<div class="col-md-2 title"></div>--%>
+						<%--<div class="col-md-6 data text"></div>--%>
 
 					</div>
 				</div>
 
 				<div class="panel panel-default">
 					<div class="panel-heading">订单及相关信息</div>
-					<c:if test="${commentsList.size() != 0}">
-						<c:forEach items="${commentsList}" var="comments">
+					<c:if test="${ordersList.size() != 0}">
+						<c:forEach items="${ordersList}" var="orders">
 							<div class="row data-type">
 
 								<div class="col-md-2 title">订单id</div>
-								<div class="col-md-4 data text">${comments.orders.oid }</div>
+								<div class="col-md-4 data text">${orders.oid }</div>
 
 								<div class="col-md-2 title">订单价格</div>
-								<div class="col-md-4 data text">￥${comments.orders.ordersPrice }</div>
+								<div class="col-md-4 data text">￥${orders.ordersPrice }</div>
 
 								<div class="col-md-2 title">订单开始时间</div>
 								<div class="col-md-4 data text">
-									<div class="input-group date">${comments.orders.startTimeStr}</div>
+									<div class="input-group date">${orders.startTimeStr}</div>
 								</div>
 
 								<div class="col-md-2 title">订单结束时间</div>
 								<div class="col-md-4 data text">
-									<div class="input-group date">${comments.orders.endTimeStr}</div>
+									<div class="input-group date">${orders.endTimeStr}</div>
 								</div>
 
 								<div class="col-md-2 title">订单状态</div>
-								<div class="col-md-4 data text">${comments.orders.ordersStatusStr }</div>
+								<div class="col-md-4 data text">${orders.ordersStatusStr }</div>
 
 								<div class="col-md-2 title">用户ID</div>
-								<div class="col-md-4 data text">${comments.user.uid }</div>
+								<div class="col-md-4 data text">${orders.user.uid }</div>
 
 								<div class="col-md-2 title">用户账号</div>
-								<div class="col-md-4 data text">${comments.user.username}</div>
+								<div class="col-md-4 data text">${orders.user.username}</div>
 
 								<div class="col-md-2 title">用户姓名</div>
-								<div class="col-md-4 data text">${comments.user.name}</div>
+								<div class="col-md-4 data text">${orders.user.name}</div>
 
 								<div class="col-md-2 title">用户性别</div>
-								<div class="col-md-4 data text">${comments.user.sex}</div>
+								<div class="col-md-4 data text">${orders.user.sex}</div>
 
 								<div class="col-md-2 title">用户手机号</div>
-								<div class="col-md-4 data text">${comments.user.tel}</div>
+								<div class="col-md-4 data text">${orders.user.tel}</div>
 
 								<div class="col-md-2 title">用户状态</div>
-								<div class="col-md-4 data text">${comments.user.userStatusStr}</div>
+								<div class="col-md-4 data text">${orders.user.userStatusStr}</div>
 
 								<div class="col-md-2 title"></div>
 								<div class="col-md-4 data text"></div>
@@ -163,7 +189,7 @@
 							</div>
 						</c:forEach>
 					</c:if>
-					<c:if test="${commentsList.size() == 0}">
+					<c:if test="${ordersList.size() == 0}">
 					<div class="row data-type">
 						<div class="col-md-12 title text">暂无任何订单信息</div>
 					</div>

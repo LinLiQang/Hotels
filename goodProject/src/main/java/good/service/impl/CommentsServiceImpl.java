@@ -68,4 +68,14 @@ public class CommentsServiceImpl implements ICommentsService {
     public List<Comments> findByRid(String rid) {
         return commentsDao.findByRid(rid);
     }
+
+    /**
+     * 根据rid查询评论信息及用户信息
+     * @param rid
+     * @return
+     */
+    @Override
+    public List<Comments> findByRidToRoom(String rid) {
+        return commentsDao.findByRidToRoom(rid);
+    }
 }

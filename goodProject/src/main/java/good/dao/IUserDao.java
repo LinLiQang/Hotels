@@ -14,7 +14,7 @@ public interface IUserDao {
      * 添加用户
      * @param user
      */
-    @Insert("insert into user(username,name,sex,password,tel,userStatus) values(#{username},#{name},#{sex},#{password},#{tel},#{userStatus})")
+    @Insert("insert into user(username,name,sex,password,avatar,tel,userStatus) values(#{username},#{name},#{sex},#{password},#{avatar},#{tel},#{userStatus})")
     void add(User user);
 
     /**
@@ -44,8 +44,15 @@ public interface IUserDao {
      * 修改用户信息
      * @param user
      */
-    @Update("update user set name = #{name} , username = #{username} , password = #{password} , sex = #{sex} , tel = #{tel}, userStatus = #{userStatus} WHERE uid = #{uid}")
+    @Update("update user set name = #{name}, username = #{username}, password = #{password}, avatar = #{avatar}, sex = #{sex}, tel = #{tel}, userStatus = #{userStatus} WHERE uid = #{uid}")
     void updateUser(User user);
+
+    /**
+     * 修改用户信息
+     * @param user
+     */
+    @Update("update user set name = #{name}, username = #{username}, avatar = #{avatar}, sex = #{sex}, tel = #{tel} WHERE uid = #{uid}")
+    void editUser(User user);
 
     /**
      * 根据id删除用户

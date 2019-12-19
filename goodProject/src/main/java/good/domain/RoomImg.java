@@ -12,6 +12,8 @@ public class RoomImg implements Serializable {
     private String firstImg;
     private String secondImg;
     private String thirdImg;
+    private String forthImg;
+    private String fifthImg;
 
     public int getImgid() {
         return imgid;
@@ -53,4 +55,19 @@ public class RoomImg implements Serializable {
         this.thirdImg = thirdImg;
     }
 
+    public String getForthImg() {
+        return forthImg;
+    }
+
+    public void setForthImg(String forthImg) {
+        this.forthImg = forthImg;
+    }
+
+    public String getFifthImg() {
+        return fifthImg;
+    }
+
+    public void setFifthImg(String fifthImg) {
+        this.fifthImg = fifthImg;
+    }
 }

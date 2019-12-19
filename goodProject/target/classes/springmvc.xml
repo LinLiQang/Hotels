@@ -28,11 +28,20 @@
         <property name="suffix" value=".jsp"></property>
     </bean>
 
+    <!-- 配置多媒体解析器，这里id必须写multipartResolver -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 最大上传大小 8m=8*1024*1024b -->
+        <property name="maxUploadSize" value="8388608"></property>
+        <property name="maxInMemorySize" value="10" />
+    </bean>
+
     <!-- 设置静态资源不过滤 -->
     <mvc:resources location="/css/" mapping="/css/**" />
     <mvc:resources location="/img/" mapping="/img/**" />
     <mvc:resources location="/js/" mapping="/js/**" />
     <mvc:resources location="/plugins/" mapping="/plugins/**" />
+    <mvc:resources location="/RoomImage/" mapping="/RoomImage/**" />
+    <mvc:resources location="/Avatar/" mapping="/Avatar/**" />
 
     <!--配置登录拦截器-->
     <!--<mvc:interceptors>

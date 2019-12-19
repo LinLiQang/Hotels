@@ -17,4 +17,8 @@ public interface IOrdersService {
     void deleteOrders(String id);
 
     List<Orders> findAllToOrders();
+
+    List<Orders> findByUid(int uid);
+
+    List<Orders> findByRid(String rid);
 }

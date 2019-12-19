@@ -64,8 +64,32 @@ public class OrderServiceImpl implements IOrdersService {
         ordersDao.deleteOrders(id);
     }
 
+    /**
+     * 查询所有订单
+     * @return
+     */
     @Override
     public List<Orders> findAllToOrders() {
         return ordersDao.findAll();
+    }
+
+    /**
+     * 根据uid查询所有订单
+     * @param uid
+     * @return
+     */
+    @Override
+    public List<Orders> findByUid(int uid) {
+        return ordersDao.findByUid(uid);
+    }
+
+    /**
+     * 根据rid查询所有订单
+     * @param rid
+     * @return
+     */
+    @Override
+    public List<Orders> findByRid(String rid) {
+        return ordersDao.findByRid(rid);
     }
 }

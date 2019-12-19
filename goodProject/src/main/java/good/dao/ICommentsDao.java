@@ -18,6 +18,7 @@ public interface ICommentsDao {
     @Results({
             @Result(id = true, property = "cid", column = "cid"),
             @Result(property = "comment", column = "comment"),
+            @Result(property = "commentTime", column = "commentTime"),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById")),
             @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
             @Result(property = "orders", column = "oid", javaType = Orders.class, one = @One(select = "good.dao.IOrdersDao.findById"))
@@ -40,6 +41,7 @@ public interface ICommentsDao {
     @Results({
             @Result(id = true, property = "cid", column = "cid"),
             @Result(property = "comment", column = "comment"),
+            @Result(property = "commentTime", column = "commentTime"),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById")),
             @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
             @Result(property = "orders", column = "oid", javaType = Orders.class, one = @One(select = "good.dao.IOrdersDao.findById"))
@@ -55,6 +57,7 @@ public interface ICommentsDao {
     @Results({
             @Result(id = true, property = "cid", column = "cid"),
             @Result(property = "comment", column = "comment"),
+            @Result(property = "commentTime", column = "commentTime"),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById")),
             @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
             @Result(property = "orders", column = "oid", javaType = Orders.class, one = @One(select = "good.dao.IOrdersDao.findById"))
@@ -70,9 +73,24 @@ public interface ICommentsDao {
     @Results({
             @Result(id = true, property = "cid", column = "cid"),
             @Result(property = "comment", column = "comment"),
+            @Result(property = "commentTime", column = "commentTime"),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById")),
             @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
             @Result(property = "orders", column = "oid", javaType = Orders.class, one = @One(select = "good.dao.IOrdersDao.findById"))
     })
     List<Comments> findByRid(String rid);
+
+    /**
+     * 根据rid查询评论信息和用户信息
+     * @param rid
+     * @return
+     */
+    @Select("select * from comments where rid = #{rid}")
+    @Results({
+            @Result(id = true, property = "cid", column = "cid"),
+            @Result(property = "comment", column = "comment"),
+            @Result(property = "commentTime", column = "commentTime"),
+            @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
+    })
+    List<Comments> findByRidToRoom(String rid);
 }

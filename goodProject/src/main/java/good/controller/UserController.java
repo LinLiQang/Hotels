@@ -2,22 +2,30 @@ package good.controller;
 
 import com.github.pagehelper.PageInfo;
 import good.domain.Comments;
+import good.domain.Orders;
 import good.domain.User;
 import good.service.ICommentsService;
+import good.service.IOrdersService;
 import good.service.IUserService;
+import good.utils.JavaToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +40,7 @@ public class UserController {
     private IUserService userService;
 
     @Autowired
-    private ICommentsService commentsService;
+    private IOrdersService ordersService;
 
     /**
      * 验证码的生成
@@ -133,15 +141,37 @@ public class UserController {
      * @param user
      * @return
      */
-    @RequestMapping("/updateUser")
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateUser(User user){
+    public Map<String, Object> updateUser(@RequestParam(name = "photo",required = false) MultipartFile photo,
+                                          User user,HttpServletRequest request) throws IOException{
         Map<String, Object> map = new HashMap<String, Object>();
+        System.out.println(user);
         if(user.getUsername() != null && user.getUsername() != "" &&
-                user.getPassword() != null && user.getPassword() != "" &&
                 user.getTel() != null && user.getTel() != "" &&
                 user.getName() != null && user.getName() != ""){
-            userService.updateUser(user);
+            //从数据库中找出当前用户信息
+            User u = userService.findById(user.getUid());
+            //获取当前项目下的头像保存路径
+            String uploadTargetPath = request.getSession().getServletContext().getRealPath("/") + "Avatar\\";
+
+            //判断是否修改头像
+            //是--保存图片，修改数据库存储信息
+            //否--保存原来图片信息
+            if(photo != null) {
+                if (!photo.isEmpty()) {
+                    String photoName = photo.getOriginalFilename();
+                    File photoFile = new File(uploadTargetPath, photoName);
+                    if (!photoFile.exists()) {
+                        new File(uploadTargetPath).mkdirs();
+                    }
+                    photo.transferTo(photoFile);
+                    user.setAvatar("Avatar/" + photoName);
+                }
+            }else {
+                user.setAvatar(u.getAvatar());
+            }
+            userService.editUser(user);
             map.put("flag", true);
             map.put("msg", "修改成功！");
             return map;
@@ -159,7 +189,7 @@ public class UserController {
      */
     @RequestMapping("/add")
     @ResponseBody
-    public Map<String, Object> add(User user, HttpServletRequest request) {
+    public Map<String, Object> add(User user) {
         Map<String, Object> map = new HashMap<String, Object>();
         if(user.getUsername() != null && user.getUsername() != "" &&
                 user.getPassword() != null && user.getPassword() != "" &&
@@ -177,6 +207,7 @@ public class UserController {
             }else{
                 //设置用户默认状态为1/普通用户
                 user.setUserStatus(1);
+                user.setAvatar("Avatar/IronMan.jpg");
                 userService.add(user);
                 map.put("flag", true);
                 map.put("msg", "注册成功！");
@@ -292,6 +323,11 @@ public class UserController {
         return "login";
     }
 
+    /**
+     * 修改密码
+     * @param user
+     * @return
+     */
     @RequestMapping("/findPassword")
     @ResponseBody
     public Map<String, Object> findPassword(User user) {
@@ -306,7 +342,7 @@ public class UserController {
                 return map;
             } else {
                 map.put("flag", false);
-                map.put("msg", "该账号绑定邮箱错误！请重新输入！");
+                map.put("msg", "该账号绑定手机号错误！请重新输入！");
                 return map;
             }
         }else{
@@ -324,13 +360,107 @@ public class UserController {
     @RequestMapping("/findByUid")
     public ModelAndView findByUid(@RequestParam(name="uid",required = true) int uid){
         ModelAndView mv = new ModelAndView();
-        List<Comments> commentsList = commentsService.findByUid(uid);
         User user = userService.findById(uid);
+        List<Orders> ordersList = ordersService.findByUid(uid);
         mv.addObject("user",user);
-        mv.addObject("commentsList",commentsList);
+        mv.addObject("ordersList",ordersList);
         mv.setViewName("userShow");
         return mv;
     }
 
+    /**
+     * 普通用户登录
+     * @param username
+     * @param password
+     * @return
+     */
+    @RequestMapping("/userLogin")
+    @ResponseBody
+    public Map<String,Object> userLogin(@RequestParam(value = "username", required = true)String username,
+                                        @RequestParam(value = "password", required = true)String password) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (username != null && username != "" && password != null && password != "") {
+            //根据用户名查找用户
+            User u = userService.findByUsername(username);
+            //判断用户是否存在
+            if (u != null) {
+                //判断用户是否被封禁
+                if (u.getUserStatus() != 0) {
+                    if (u.getPassword().equals(password)) {
+                        //调用函数生成token
+                        String token = JavaToken.createToken(u.getUsername(),u.getPassword());
+                        map.put("token",token);
+                        map.put("user",u);
+                        map.put("flag", true);
+                        map.put("msg", "登陆成功！正在跳转至首页...");
+                        return map;
+                    } else {
+                        map.put("flag", false);
+                        map.put("msg", "密码错误！");
+                        return map;
+                    }
+                } else {
+                    map.put("flag", false);
+                    map.put("msg", "用户名已被禁止访问！请联系管理员解封！");
+                    return map;
+                }
+            }else {
+                map.put("flag", false);
+                map.put("msg", "用户不存在！请先注册！");
+                return map;
+            }
+        }else {
+            map.put("flag", false);
+            map.put("msg", "用户名或密码不可为空！");
+            return map;
+        }
+    }
+
+
+    /*@RequestMapping("/updateUser")
+    @ResponseBody
+    public Map<String,Object> updateUser(@RequestParam(value = "photo", required = true)MultipartFile photo,
+                                         User user,HttpServletRequest request) throws Exception{
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("flag",true);
+        return map;
+    }*/
+
+    @RequestMapping("/userDetail")
+    @ResponseBody
+    public Map<String,Object> userDetail(String username){
+        Map<String, Object> map = new HashMap<>();
+        User user = userService.findByUsername(username);
+        map.put("user",user);
+        return map;
+    }
+
+    /**
+     * 修改密码
+     * @param uid
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @RequestMapping("/updatePassword")
+    @ResponseBody
+    public Map<String,Object> updatePassword(@RequestParam(value = "uid")int uid,
+                                             @RequestParam(value = "oldPassword")String oldPassword,
+                                             @RequestParam(value = "newPassword")String newPassword){
+        Map<String,Object> map = new HashMap<>();
+        User user = userService.findById(uid);
+        if(oldPassword.equals(user.getPassword())){
+            user.setPassword(newPassword);
+            userService.updateUser(user);
+            map.put("flag",true);
+            map.put("msg","修改密码成功！");
+            return map;
+        }else{
+            map.put("flag",false);
+            map.put("msg","原密码不正确！请尝试找回密码！");
+            return map;
+        }
+    }
 
 }

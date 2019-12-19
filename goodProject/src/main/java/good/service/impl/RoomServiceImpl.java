@@ -87,4 +87,10 @@ public class RoomServiceImpl implements IRoomService {
     public List<Room> findAllToOrders() {
         return roomDao.findAll();
     }
+
+    @Override
+    public List<Room> findByType(int page, int size, int type) {
+        PageHelper.startPage(page,size);
+        return roomDao.findByType(type);
+    }
 }

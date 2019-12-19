@@ -19,7 +19,7 @@ public class Orders implements Serializable {
     private Date endTime;               //订单结束时间 设置时间格式
     private String endTimeStr;          //结束时间的格式转换
     private Double ordersPrice;         //订单价格
-    private int ordersStatus;           //订单状态  0已完成 1正在进行 2已取消
+    private int ordersStatus;           //订单状态  0已取消 1正在进行 2已完成 3已评论
     private String ordersStatusStr;     //订单状态格式转换
     private int uid;                    //下单用户id
     private String rid;                 //下单房间
@@ -90,13 +90,16 @@ public class Orders implements Serializable {
 
     public String getOrdersStatusStr() {
         if(ordersStatus == 0){
-            ordersStatusStr = "已完成";
+            ordersStatusStr = "已取消";
         }
         if(ordersStatus == 1){
             ordersStatusStr = "正在进行";
         }
         if(ordersStatus == 2){
-            ordersStatusStr = "已取消";
+            ordersStatusStr = "已完成";
+        }
+        if(ordersStatus == 3){
+            ordersStatusStr = "已评论";
         }
         return ordersStatusStr;
     }

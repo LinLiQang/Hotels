@@ -3,7 +3,9 @@ package good.controller;
 import com.github.pagehelper.PageInfo;
 import good.domain.Orders;
 import good.domain.Room;
+import good.domain.RoomImg;
 import good.service.IOrdersService;
+import good.service.IRoomImgService;
 import good.service.IRoomService;
 import good.utils.DateUtils;
 import good.utils.RandomUtils;
@@ -26,6 +28,9 @@ public class OrdersController {
 
     @Autowired
     private IRoomService roomService;
+
+    @Autowired
+    private IRoomImgService roomImgService;
 
     /**
      * 查询所有订单
@@ -137,10 +142,18 @@ public class OrdersController {
         return map;
     }
 
-    @RequestMapping("/toOrders")
-    public void findToOrders(@RequestParam(value = "startTime")String startTime,
+    /**
+     * 用户根据需求查询符合的客房
+     * @param startTime
+     * @param endTime
+     * @param type
+     * @throws ParseException
+     */
+    /*@RequestMapping("/toOrders")
+    public Map<String,Object> findToOrders(@RequestParam(value = "startTime")String startTime,
                              @RequestParam(value = "endTime")String endTime,
                              @RequestParam(value = "type")int type) throws ParseException {
+        Map<String,Object> map = new HashMap<String, Object>();
         Date startTime1 = DateUtils.stringToDate(startTime,"yyyy-MM-dd");
         Date endTime1 = DateUtils.stringToDate(endTime,"yyyy-MM-dd");
 
@@ -148,25 +161,18 @@ public class OrdersController {
         List<Orders> ordersList = ordersService.findAllToOrders();
         List<Room> noRoom = new ArrayList<Room>();
         for(Orders orders : ordersList){
-            if(startTime1.compareTo(orders.getStartTime())>0 && startTime1.compareTo(orders.getEndTime())<0){
+            if(startTime1.compareTo(orders.getStartTime())>0 && startTime1.compareTo(orders.getEndTime())<0 && orders.getOrdersStatus() == 1){
                 noRoom.add(orders.getRoom());
-            }else if(endTime1.compareTo(orders.getStartTime())>0 && endTime1.compareTo(orders.getEndTime())<0){
+            }else if(endTime1.compareTo(orders.getStartTime())>0 && endTime1.compareTo(orders.getEndTime())<0 && orders.getOrdersStatus() == 1){
                 noRoom.add(orders.getRoom());
-            }else if(startTime1.compareTo(orders.getStartTime())<0 && endTime1.compareTo(orders.getEndTime())>0){
+            }else if(startTime1.compareTo(orders.getStartTime())<0 && endTime1.compareTo(orders.getEndTime())>0 && orders.getOrdersStatus() == 1){
                 noRoom.add(orders.getRoom());
             }
         }
-
         //除去重复的房间
         HashSet set = new HashSet(noRoom);
         noRoom.clear();
         noRoom.addAll(set);
-
-        System.out.println(noRoom);
-        for(Room room: noRoom){
-            System.out.println(room);
-        }
-
         //查出所有房间并找出符合类型的房间
         List<Room> roomList = roomService.findAllToOrders();
         List<Room> rooms = new ArrayList<Room>();
@@ -175,14 +181,22 @@ public class OrdersController {
                 rooms.add(room);
             }
         }
-
-        /*此处需要在room实体类中重写hashCode()和equals()方法
-        * 实现去除符合类型房间集合中时间不符合的房间*/
+        *//*此处需要在room实体类中重写hashCode()和equals()方法
+        * 实现去除符合类型房间集合中时间不符合的房间*//*
         rooms.removeAll(noRoom);
-
         //遍历所有符合要求的可用房间集合
         for(Room room : rooms){
+            room.setRoomImg(roomImgService.findByRid(room.getRid()));
             System.out.println(room);
         }
-    }
+        if(rooms != null) {
+            map.put("roomList", rooms);
+            return map;
+        }else{
+            map.put("msg","当前时间段无您需要的房间!请您再考虑一下！");
+            return map;
+        }
+    }*/
+
+
 }

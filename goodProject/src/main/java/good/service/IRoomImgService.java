@@ -2,6 +2,8 @@ package good.service;
 
 import good.domain.RoomImg;
 
+import java.util.List;
+
 public interface IRoomImgService {
 
     RoomImg findByRid(String rid);
@@ -11,4 +13,5 @@ public interface IRoomImgService {
     void add(RoomImg roomImg);
 
     void deleteRoomImg(String rid);
+
 }

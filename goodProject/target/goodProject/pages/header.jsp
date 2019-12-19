@@ -27,8 +27,8 @@
 			<ul class="nav navbar-nav">
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<% String loginName = request.getSession().getAttribute("loginName").toString();%>
-						<span class="hidden-xs">欢迎回来，<%=loginName %></span>
+						<%--<% String loginName = request.getSession().getAttribute("loginName").toString();%>--%>
+						<span class="hidden-xs">欢迎回来，<%--<%=loginName %>--%>管理员</span>
 					</a>
 					<ul class="dropdown-menu">
 						<!-- User image -->
@@ -36,7 +36,7 @@
 							<img src="${pageContext.request.contextPath}/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
 							<p>
-								管理员 -- <%=loginName %>
+								管理员 <%---- <%=loginName %>--%>
 								<%--<small>最后登录 11:20AM</small>--%>
 							</p>
 						</li>

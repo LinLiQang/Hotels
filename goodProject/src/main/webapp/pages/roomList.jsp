@@ -133,6 +133,7 @@
                                         <td class="text-center">${room.typeStr}</td>
                                         <td class="text-center">${room.roomStatusStr}</td>
                                         <td class="text-center">
+                                            <button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/room/testImageOne?rid='+${room.rid}">测试</button>
                                             <button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/room/findByRid?rid='+${room.rid}">详情</button>
                                             <button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/room/beforeUpdateRoom?id='+${room.rid}">编辑</button>
                                             <button type="button" class="btn bg-olive btn-xs"  onclick="deleteRoom(${room.rid})">删除</button>

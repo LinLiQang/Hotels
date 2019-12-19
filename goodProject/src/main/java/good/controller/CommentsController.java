@@ -89,4 +89,18 @@ public class CommentsController {
         return mv;
     }
 
+    /**
+     * 根据客房id查询该房间所有的评论
+     * @param rid
+     * @return
+     */
+    @RequestMapping(value = "/findCommentsByRid")
+    @ResponseBody
+    public Map<String,Object> findByRid(@RequestParam(name = "rid", required = true)String rid){
+        Map<String,Object> map = new HashMap<>();
+        List<Comments> commentsList = commentsService.findByRid(rid);
+        map.put("commentsList",commentsList);
+        return map;
+    }
+
 }

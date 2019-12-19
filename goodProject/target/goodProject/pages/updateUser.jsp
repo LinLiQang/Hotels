@@ -92,14 +92,26 @@
         $(function(){
             $("#sub").click(function(){
                 if(checkUsername() && checkTel() && checkName() && checkPassword()){
-                    $.post("${pageContext.request.contextPath}/user/updateUser",$("form").serialize(),function(data){
-                        if(data.flag){
-                            alert(data.msg);
-                            location.href="${pageContext.request.contextPath}/user/findAll";
-                        }else{
-                            alert(data.msg);
+
+                    $.ajax({
+                        async:false,
+                        url: '${pageContext.request.contextPath}/user/updateUser',
+                        type: 'POST',
+                        cache: false,
+                        data: new FormData($('#userForm')[0]),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        success:function(data){
+                            if(data.flag == true){
+                                alert(data.msg);
+                                window.location.href= "";
+                            }else{
+                                alert(data.msg);
+                                window.location.href= "";
+                            }
                         }
-                    },'json');
+                    });
                 }else{
                     alert("数据格式不对！");
                 }
@@ -142,7 +154,7 @@
             </section>
             <!-- 内容头部 /-->
 
-            <form method="post">
+            <form id="userForm" method="post">
                 <!-- 正文区域 -->
                 <section class="content">
 
@@ -208,6 +220,17 @@
                                     </c:if>
                                 </select>
                             </div>
+
+                            <div class="col-md-2 title">头像名称</div>
+                            <div class="col-md-4 data">
+                                <input type="text" class="form-control" value="${user.avatar}" readonly="readonly"/>
+                            </div>
+
+                            <div class="col-md-2 title">修改头像</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="photo"/>
+                            </div>
+
 
                         </div>
                     </div>

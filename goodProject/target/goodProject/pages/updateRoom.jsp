@@ -4,11 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>编辑客房信息</title>
-    <meta name="description" content="AdminLTE2定制版">
-    <meta name="keywords" content="AdminLTE2定制版">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
 
     <script src="${pageContext.request.contextPath}/js/jquery-3.3.1.js"></script>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -40,14 +38,25 @@
     <script>
         $(function(){
             $("#sub").click(function(){
-                $.post("${pageContext.request.contextPath}/room/updateRoom",$("form").serialize(),function(data){
-                    if(data.flag){
-                        alert(data.msg);
-                        location.href="${pageContext.request.contextPath}/room/findAll";
-                    }else{
-                        alert(data.msg);
+                $.ajax({
+                    async:false,
+                    url: '${pageContext.request.contextPath}/room/updateRoom',
+                    type: 'POST',
+                    cache: false,
+                    data: new FormData($('#roomForm')[0]),
+                    processData: false,
+                    dataType: 'json',
+                    contentType: false,
+                    success:function(data){
+                        if(data.flag == true){
+                            alert(data.msg);
+                            window.location.href= "";
+                        }else{
+                            alert(data.msg);
+                            window.location.href= "";
+                        }
                     }
-                },'json');
+                });
             });
         });
     </script>
@@ -83,7 +92,7 @@
             </section>
             <!-- 内容头部 /-->
 
-            <form method="post">
+            <form id="roomForm" method="post" enctype="multipart/form-data">
                 <!-- 正文区域 -->
                 <section class="content">
 
@@ -109,26 +118,26 @@
                                     <c:if test="${room.type == 1}">
                                         <option value="1" selected="selected">单人房</option>
                                         <option value="2">双人房</option>
-                                        <option value="3">豪华单人房</option>
-                                        <option value="4">豪华双人房</option>
+                                        <option value="3">豪华房</option>
+                                        <option value="4">家庭房</option>
                                     </c:if>
                                     <c:if test="${room.type == 2}">
                                         <option value="1">单人房</option>
                                         <option value="2" selected="selected">双人房</option>
-                                        <option value="3">豪华单人房</option>
-                                        <option value="4">豪华双人房</option>
+                                        <option value="3">豪华房</option>
+                                        <option value="4">家庭房</option>
                                     </c:if>
                                     <c:if test="${room.type == 3}">
                                         <option value="1">单人房</option>
                                         <option value="2">双人房</option>
-                                        <option value="3" selected="selected">豪华单人房</option>
-                                        <option value="4">豪华双人房</option>
+                                        <option value="3" selected="selected">豪华房</option>
+                                        <option value="4">家庭房</option>
                                     </c:if>
                                     <c:if test="${room.type == 4}">
                                         <option value="1">单人房</option>
                                         <option value="2">双人房</option>
-                                        <option value="3">豪华单人房</option>
-                                        <option value="4" selected="selected">豪华双人房</option>
+                                        <option value="3">豪华房</option>
+                                        <option value="4" selected="selected">家庭房</option>
                                     </c:if>
 
                                 </select>
@@ -156,17 +165,64 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2 title">第一张图片路径</div>
-                            <div class="col-md-4 data">
-                                <input type="text" id="firstImg" class="form-control" value="${roomImg.firstImg}" name="firstImg">
+                            <div class="col-md-2 title">客房简介</div>
+                            <div class="col-md-10 data">
+                                <input type="text" class="form-control" rows="3" value="${room.introduction}" name="introduction"></textarea>
                             </div>
-                            <div class="col-md-2 title">第二张图片路径</div>
-                            <div class="col-md-4 data">
-                                <input type="text" id="secondImg" class="form-control" value="${roomImg.secondImg}" name="secondImg">
+
+                            <div class="col-md-2 title">客房描述</div>
+                            <div class="col-md-10 data">
+                                <input type="text" class="form-control" rows="3" value="${room.detail}" name="detail"></input>
                             </div>
-                            <div class="col-md-2 title">第三张图片路径</div>
+
+                            <div class="col-md-2 title">客房图片一名称</div>
                             <div class="col-md-4 data">
-                                <input type="text" id="thirdImg" class="form-control" value="${roomImg.thirdImg}" name="thirdImg">
+                                <input type="text" class="form-control" value="${roomImg.firstImg}" readonly="readonly"/>
+                            </div>
+
+                            <div class="col-md-2 title">修改图片一</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="firstImg"/>
+                            </div>
+
+                            <div class="col-md-2 title">客房图片二名称</div>
+                            <div class="col-md-4 data">
+                                <input type="text" class="form-control" value="${roomImg.secondImg}" readonly="readonly"/>
+                            </div>
+
+                            <div class="col-md-2 title">修改图片二</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="secondImg"/>
+                            </div>
+
+                            <div class="col-md-2 title">客房图片三名称</div>
+                            <div class="col-md-4 data">
+                                <input type="text" class="form-control" value="${roomImg.thirdImg}" readonly="readonly"/>
+                            </div>
+
+                            <div class="col-md-2 title">修改图片三</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="thirdImg"/>
+                            </div>
+
+                            <div class="col-md-2 title">客房图片四名称</div>
+                            <div class="col-md-4 data">
+                                <input type="text" class="form-control" value="${roomImg.forthImg}" readonly="readonly"/>
+                            </div>
+
+                            <div class="col-md-2 title">修改图片四</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="forthImg"/>
+                            </div>
+
+                            <div class="col-md-2 title">客房图片五名称</div>
+                            <div class="col-md-4 data">
+                                <input type="text" class="form-control" value="${roomImg.fifthImg}" readonly="readonly"/>
+                            </div>
+
+                            <div class="col-md-2 title">修改图片五</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="fifthImg"/>
                             </div>
 
                         </div>

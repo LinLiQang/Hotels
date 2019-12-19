@@ -75,6 +75,11 @@ public class UserServiceImpl implements IUserService {
         userDao.updateUser(user);
     }
 
+    @Override
+    public void editUser(User user) {
+        userDao.editUser(user);
+    }
+
     /**
      * 根据id删除用户
      * @param id

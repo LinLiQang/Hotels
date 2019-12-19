@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>添加客房</title>
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
 
     <script src="${pageContext.request.contextPath}/js/jquery-3.3.1.js"></script>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -37,16 +37,28 @@
     <script>
         $(function(){
             $("#sub").click(function(){
-                $.post("${pageContext.request.contextPath}/room/add",$("form").serialize(),function(data){
-                    if(data.flag){
-                        alert(data.msg);
-                        location.href="${pageContext.request.contextPath}/room/findAll";
-                    }else{
-                        alert(data.msg);
+                $.ajax({
+                    async:false,
+                    url: '${pageContext.request.contextPath}/room/add',
+                    type: 'POST',
+                    cache: false,
+                    data: new FormData($('#roomForm')[0]),
+                    processData: false,
+                    dataType: 'json',
+                    contentType: false,
+                    success:function(data){
+                        if(data.flag == true){
+                            alert(data.msg);
+                            window.location.href= "pages/home.jsp";
+                        }else{
+                            alert(data.msg);
+                            window.location.href= "pages/home.jsp";
+                        }
                     }
-                },'json');
+                });
             });
         });
+
     </script>
 
 </head>
@@ -80,7 +92,7 @@
             </section>
             <!-- 内容头部 /-->
 
-            <form method="post">
+            <form id="roomForm" method="post" enctype="multipart/form-data">
                 <!-- 正文区域 -->
                 <section class="content">
 
@@ -105,8 +117,8 @@
                                         name="type">
                                     <option value="1" selected="selected">单人房</option>
                                     <option value="2">双人房</option>
-                                    <option value="3">豪华单人房</option>
-                                    <option value="4">豪华双人房</option>
+                                    <option value="3">豪华房</option>
+                                    <option value="4">家庭房</option>
                                 </select>
                             </div>
 
@@ -120,28 +132,52 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2 title">客房图片路径一</div>
+                            <div class="col-md-2 title">客房图片一</div>
                             <div class="col-md-4 data">
-                                <input type="text" class="form-control" placeholder="图片路径" value="" name="firstImg">
+                                <input type="file" class="form-control" name="firstImg"/>
                             </div>
 
-                            <div class="col-md-2 title">客房图片路径二</div>
+                            <div class="col-md-2 title">客房图片二</div>
                             <div class="col-md-4 data">
-                                <input type="text" class="form-control" placeholder="图片路径" value="" name="secondImg">
+                                <input type="file" class="form-control" name="secondImg"/>
                             </div>
 
-                            <div class="col-md-2 title">客房图片路径三</div>
+                            <div class="col-md-2 title">客房图片三</div>
                             <div class="col-md-4 data">
-                                <input type="text" class="form-control" placeholder="图片路径" value="" name="thirdImg">
+                                <input type="file" class="form-control" name="thirdImg"/>
                             </div>
+
+                            <div class="col-md-2 title">客房图片四</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="forthImg"/>
+                            </div>
+
+                            <div class="col-md-2 title">客房图片五</div>
+                            <div class="col-md-4 data">
+                                <input type="file" class="form-control" name="fifthImg"/>
+                            </div>
+
+                            <div class="col-md-2 title"></div>
+                            <div class="col-md-4 data"></div>
+
+                            <div class="col-md-2 title rowHeight2x">客房简介</div>
+                            <div class="col-md-10 data rowHeight2x">
+                                <textarea class="form-control" rows="3" placeholder="客房简介" name="introduction"></textarea>
+                            </div>
+
+                            <div class="col-md-2 title rowHeight2x">客房描述</div>
+                            <div class="col-md-10 data rowHeight2x">
+                                <textarea class="form-control" rows="3" placeholder="客房描述" name="detail"></textarea>
+                            </div>
+
 
                         </div>
                     </div>
 
                     <!--工具栏-->
                     <div class="box-tools text-center">
-                        <button type="button" class="btn bg-maroon" id="sub">添加</button>
-                        <button type="button" class="btn bg-default" onclick="history.back(-1);">返回</button>
+                        <button type="submit" class="btn bg-maroon" id="sub">添加</button>
+                        <button type="button" class="btn bg-default" onclick="location.href='${pageContext.request.contextPath}/room/findAll'">返回</button>
                     </div>
                     <!--工具栏/-->
                     <!--客房信息/-->

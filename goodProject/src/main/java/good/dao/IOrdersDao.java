@@ -66,4 +66,40 @@ public interface IOrdersDao {
      */
     @Delete("delete from orders where oid = #{id}")
     void deleteOrders(String id);
+
+    /**
+     * 根据uid查询所有订单
+     * @param uid
+     * @return
+     */
+    @Select("select * from orders where uid = #{uid}")
+    @Results({
+            @Result(id = true, property = "oid", column = "oid"),
+            @Result(property = "startTime", column = "startTime"),
+            @Result(property = "endTime", column = "endTime"),
+            @Result(property = "ordersPrice", column = "ordersPrice"),
+            @Result(property = "ordersStatus", column = "ordersStatus"),
+            @Result(property = "startTime", column = "startTime"),
+            @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
+            @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
+    })
+    List<Orders> findByUid(int uid);
+
+    /**
+     * 根据rid查询所有订单
+     * @param rid
+     * @return
+     */
+    @Select("select * from orders where rid = #{rid}")
+    @Results({
+            @Result(id = true, property = "oid", column = "oid"),
+            @Result(property = "startTime", column = "startTime"),
+            @Result(property = "endTime", column = "endTime"),
+            @Result(property = "ordersPrice", column = "ordersPrice"),
+            @Result(property = "ordersStatus", column = "ordersStatus"),
+            @Result(property = "startTime", column = "startTime"),
+            @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
+            @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
+    })
+    List<Orders> findByRid(String rid);
 }
