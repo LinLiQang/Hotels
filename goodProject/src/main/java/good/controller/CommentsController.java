@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,10 @@ public class CommentsController {
     @Autowired
     private ICommentsService commentsService;
 
+    /**管理员操作**/
+
     /**
-     * 查询所有评论
+     * 后台查询所有评论
      * @param page
      * @param size
      * @return
@@ -42,7 +45,7 @@ public class CommentsController {
     }
 
     /**
-     * 根据id删除评论
+     * 后台根据id删除评论
      * @param id
      * @return
      */
@@ -55,7 +58,7 @@ public class CommentsController {
     }
 
     /**
-     * 删除选中的评论
+     * 后台删除选中的评论
      * @param ids
      * @return
      */
@@ -74,7 +77,7 @@ public class CommentsController {
     }
 
     /**
-     * 根据cid查询评论详情
+     * 后台根据cid查询评论详情
      * @param cid
      * @return
      */
@@ -89,8 +92,10 @@ public class CommentsController {
         return mv;
     }
 
+    /**管理员操作**/
+
     /**
-     * 根据客房id查询该房间所有的评论
+     * 后台根据客房id查询该房间所有的评论
      * @param rid
      * @return
      */
@@ -102,5 +107,21 @@ public class CommentsController {
         map.put("commentsList",commentsList);
         return map;
     }
+
+
+    /**用户操作**/
+
+    @RequestMapping("/toComment")
+    @ResponseBody
+    public Map<String, Object> toComment(Comments comments){
+        Map<String, Object> map = new HashMap<>();
+        comments.setCommentTime(new Date());
+        commentsService.addComments(comments);
+        map.put("flag", true);
+        map.put("msg", "评论成功！");
+        return map;
+    }
+
+    /**用户操作**/
 
 }

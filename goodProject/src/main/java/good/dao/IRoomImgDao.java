@@ -38,4 +38,12 @@ public interface IRoomImgDao {
      */
     @Delete("delete from room_img where rid = #{rid}")
     void deleteRoomImg(String rid);
+
+    /**
+     * 根据rid返回第一张照片
+     * @param rid
+     * @return
+     */
+    @Select("select firstImg from room_img where rid = #{rid}")
+    String findFirstImg(String rid);
 }

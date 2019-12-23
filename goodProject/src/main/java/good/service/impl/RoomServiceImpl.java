@@ -18,13 +18,13 @@ public class RoomServiceImpl implements IRoomService {
     private IRoomDao roomDao;
 
     /**
-     * 查询所有
+     * 查询所有房间（分页）
      * @return
      */
     @Override
     public List<Room> findAll(int page, int size) {
         PageHelper.startPage(page,size);
-        return roomDao.findAll();
+        return roomDao.findStatus();
     }
 
     /**
@@ -85,12 +85,44 @@ public class RoomServiceImpl implements IRoomService {
      */
     @Override
     public List<Room> findAllToOrders() {
-        return roomDao.findAll();
+        return roomDao.findStatus();
     }
 
+    /**
+     * 根据房间类型查找房间（分页）
+     * @param page
+     * @param size
+     * @param type
+     * @return
+     */
     @Override
     public List<Room> findByType(int page, int size, int type) {
         PageHelper.startPage(page,size);
         return roomDao.findByType(type);
+    }
+
+    /**
+     * 根据房间类型查找房间（未分页）
+     * @param type
+     * @return
+     */
+    @Override
+    public List<Room> findByType(int type) {
+        return roomDao.findByType(type);
+    }
+
+    /**
+     * 查询所有房间
+     * @return
+     */
+    @Override
+    public List<Room> findAllToAdminOrders() {
+        return roomDao.findAll();
+    }
+
+    @Override
+    public List<Room> findAllToAdmin(int page, int size) {
+        PageHelper.startPage(page,size);
+        return roomDao.findAll();
     }
 }

@@ -41,7 +41,7 @@ public class RoomController {
     @Autowired
     private IRoomImgService roomImgService;
 
-    /**后台管理员请求**/
+    /**管理员操作**/
 
     /**
      * 向后台返回所有客房信息
@@ -51,7 +51,7 @@ public class RoomController {
     public ModelAndView findAll(@RequestParam(name = "page",required = true, defaultValue = "1")int page,
                                 @RequestParam(name = "size",required = true, defaultValue = "5")int size){
         ModelAndView mv = new ModelAndView();
-        List<Room> rooms = roomService.findAll(page,size);
+        List<Room> rooms = roomService.findAllToAdmin(page,size);
         PageInfo pageInfo = new PageInfo(rooms);
         mv.addObject("roomList",pageInfo);
         mv.setViewName("roomList");
@@ -59,7 +59,7 @@ public class RoomController {
     }
 
     /**
-     * 添加客房
+     * 后台添加客房
      * @param room
      * @return
      */
@@ -72,9 +72,9 @@ public class RoomController {
                                    @RequestParam(name = "fifthImg",required = true) MultipartFile fifthImg,
                                    Room room, HttpServletRequest request) throws IOException {
         Map<String, Object> map = new HashMap<>();
-        if(room.getRid() != null && room.getRid() != "" && room.getRoomPrice() != null && room.getRoomPrice() > 0 &&
-                room.getDetail() != null && room.getDetail() != "" && room.getIntroduction() != null && room.getIntroduction() != "" &&
-                firstImg != null && secondImg != null && thirdImg != null){
+        if(!room.getRid().isEmpty() && room.getRoomPrice() != null && room.getRoomPrice() > 0 &&
+                !room.getDetail().isEmpty() && !room.getIntroduction().isEmpty() &&
+                !firstImg.isEmpty() && !secondImg.isEmpty() && !thirdImg.isEmpty() && !forthImg.isEmpty() && !fifthImg.isEmpty()){
             if(roomService.findById(room.getRid()) == null){
                 RoomImg roomImg = new RoomImg();
                 //获取存储图片路径
@@ -139,7 +139,7 @@ public class RoomController {
     }
 
     /**
-     * 修改客房信息之前查询原本的客房信息
+     * 后台修改客房信息之前查询原本的客房信息
      * @param id
      * @return
      */
@@ -155,7 +155,7 @@ public class RoomController {
     }
 
     /**
-     * 修改客房信息
+     * 后台修改客房信息
      * @param room
      * @return
      */
@@ -169,8 +169,7 @@ public class RoomController {
                                           Room room, HttpServletRequest request) throws IOException {
         Map<String, Object> map = new HashMap<String, Object>();
         int n = 0;
-        if(room.getRid() != null && room.getRid() != "" && room.getRoomPrice() != null && room.getRoomPrice() > 0 &&
-                room.getDetail() != null && room.getDetail() != "" && room.getIntroduction() != null && room.getIntroduction() != ""){
+        if(!room.getRid().isEmpty() && room.getRoomPrice() != null && room.getRoomPrice() > 0 && !room.getDetail().isEmpty() && !room.getIntroduction().isEmpty()){
             //从数据库中找出当前的图片数据
             RoomImg roomImg = roomImgService.findByRid(room.getRid());
             //获取存储房间图片路径
@@ -250,7 +249,7 @@ public class RoomController {
     }
 
     /**
-     * 根据客房号删除客房
+     * 后台根据rid删除客房
      * @param id
      * @return
      */
@@ -262,7 +261,7 @@ public class RoomController {
     }
 
     /**
-     * 删除选中的客房
+     * 后台删除选中的客房
      * @param ids
      * @return
      */
@@ -280,7 +279,7 @@ public class RoomController {
     }
 
     /**
-     * 为订单模块根据客房的不同异步更新价格
+     * 后台为订单模块根据客房的不同异步更新价格
      * @param rid
      * @return
      */
@@ -288,7 +287,7 @@ public class RoomController {
     @ResponseBody
     public Map<String, Object> findPrice(@RequestParam(value = "rid")String rid){
         Map<String, Object> map = new HashMap<>();
-        List<Room> rooms = roomService.findAllToOrders();
+        List<Room> rooms = roomService.findAllToAdminOrders();
         for(Room room : rooms){
             if(room.getRid().equals(rid)){
                 map.put("price",room.getRoomPrice());
@@ -300,7 +299,7 @@ public class RoomController {
     }
 
     /**
-     * 根据rid查询客房信息及订单等详细信息
+     * 后台根据rid查询客房信息及订单等详细信息
      * @param rid
      * @return
      */
@@ -318,30 +317,10 @@ public class RoomController {
         return mv;
     }
 
-    /**后台管理员请求**/
+    /**管理员操作**/
 
 
-    /**前台用户请求**/
-
-    /**
-     * 向前台返回所有客房
-     * @param page
-     * @param size
-     * @return
-     */
-   /* @RequestMapping("/findAllRoom")
-    @ResponseBody
-    public Map<String,Object> findAllRoom(@RequestParam(name = "page",required = true, defaultValue = "1")int page,
-                                          @RequestParam(name = "size",required = true, defaultValue = "6")int size){
-        Map<String, Object> map = new HashMap<>();
-        List<Room> rooms = roomService.findAll(page, size);
-        for (Room room:rooms) {
-            room.setRoomImg(roomImgService.findByRid(room.getRid()));
-        }
-        PageInfo pageInfo = new PageInfo(rooms);
-        map.put("roomList",pageInfo);
-        return map;
-    }*/
+    /**用户操作**/
 
     /**
      * 根据房间类型向前台返回房间
@@ -358,16 +337,19 @@ public class RoomController {
                                                 @RequestParam(name = "endTime",required = false)String endTime,
                                                 @RequestParam(name = "type",required = true)int type) throws ParseException {
         Map<String, Object> map = new HashMap<>();
-        if(startTime == null || startTime == "" || endTime == null || endTime == "") {
+        //判断是否输入时间，未输入则是普通查找，输入时间则查找符合时间要求的房间
+        if(startTime == null || endTime == null ) {
+            //type=0为查询所有
             if(type == 0){
                 List<Room> rooms = roomService.findAll(page, size);
                 for (Room room:rooms) {
+                    //为所有房间添加图片类
                     room.setRoomImg(roomImgService.findByRid(room.getRid()));
                 }
                 PageInfo pageInfo = new PageInfo(rooms);
                 map.put("roomList",pageInfo);
                 return map;
-            }else {
+            }else {//按类别查找
                 List<Room> rooms = roomService.findByType(page, size, type);
                 for (Room room : rooms) {
                     room.setRoomImg(roomImgService.findByRid(room.getRid()));
@@ -377,13 +359,16 @@ public class RoomController {
                 return map;
             }
         }else{
+            //根据时间查询
+            //将时间字符串转为时间格式
             Date startTime1 = DateUtils.stringToDate(startTime,"yyyy-MM-dd");
             Date endTime1 = DateUtils.stringToDate(endTime,"yyyy-MM-dd");
 
-            //从订单表中查出时间重复的房间
-            List<Orders> ordersList = ordersService.findAllToOrders();
+            //从订单表中查出所有房间
+            List<Orders> ordersList = ordersService.findAllForOrders();
             List<Room> noRoom = new ArrayList<Room>();
             for(Orders orders : ordersList){
+                //判断是时间是否冲突并且订单是否正在进行
                 if(startTime1.compareTo(orders.getStartTime())>=0 && startTime1.compareTo(orders.getEndTime())<=0 && orders.getOrdersStatus() == 1){
                     noRoom.add(orders.getRoom());
                 }else if(endTime1.compareTo(orders.getStartTime())>=0 && endTime1.compareTo(orders.getEndTime())<=0 && orders.getOrdersStatus() == 1){
@@ -392,28 +377,48 @@ public class RoomController {
                     noRoom.add(orders.getRoom());
                 }
             }
-            //除去重复的房间
+            //除去集合中重复的房间
             HashSet set = new HashSet(noRoom);
             noRoom.clear();
             noRoom.addAll(set);
             //查出所有房间并找出符合类型的房间
-            List<Room> roomList = roomService.findByType(page,size,type);
-            List<Room> rooms = new ArrayList<Room>();
-            for(Room room : roomList){
-                if(room.getType() == type){
-                    rooms.add(room);
-                }
+            List<Room> roomList = new ArrayList<>();
+            if(type == 0) {//判断是否为查询所有
+                roomList = roomService.findAllToOrders();
+            }else {
+                roomList = roomService.findByType(type);
             }
-            /*此处需要在room实体类中重写hashCode()和equals()方法
-             * 实现去除符合类型房间集合中时间不符合的房间*/
-            rooms.removeAll(noRoom);
-            //遍历所有符合要求的可用房间集合
-            for(Room room : rooms){
+            //从符合类别的房间集合中去除时间冲突的房间
+            roomList.removeAll(noRoom);
+            List<Room> finalRoom = new ArrayList<>();
+            if(page < 1) {
+                page = 1;
+            }
+            if(page > (roomList.size()/size+1)) {
+                page = roomList.size() / size + 1;
+            }
+            for(int i = (page*size-size); i <= (page*size-1); i++){
+                finalRoom.add(roomList.get(i));
+                if(i+1 == roomList.size())
+                    break;
+            }
+            for(Room room : finalRoom){
+                //向最终需要返回的房间集合插入图片对象
                 room.setRoomImg(roomImgService.findByRid(room.getRid()));
                 System.out.println(room);
             }
-            if(rooms != null) {
-                PageInfo pageInfo = new PageInfo(rooms);
+            if(finalRoom != null) {
+                PageInfo pageInfo = new PageInfo(finalRoom);
+                //设置最大页数
+                if(roomList.size()%6 == 0){
+                    pageInfo.setPages(roomList.size()/6);
+                }else{
+                    pageInfo.setPages(roomList.size()/6+1);
+                }
+                //设置当前页数
+                pageInfo.setPageNum(page);
+                //设置总数据条数
+                pageInfo.setTotal(roomList.size());
                 map.put("roomList", pageInfo);
                 return map;
             }else{
@@ -421,7 +426,6 @@ public class RoomController {
                 return map;
             }
         }
-
     }
 
     /**
@@ -441,6 +445,6 @@ public class RoomController {
         return map;
     }
 
-    /**前台用户请求**/
+    /**用户操作**/
 
 }

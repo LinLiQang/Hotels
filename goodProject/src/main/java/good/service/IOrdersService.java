@@ -21,4 +21,10 @@ public interface IOrdersService {
     List<Orders> findByUid(int uid);
 
     List<Orders> findByRid(String rid);
+
+    List<Orders> findAllForOrders();
+
+    List<Orders> findToUser(int uid);
+
+    void cancelOrders(String oid);
 }

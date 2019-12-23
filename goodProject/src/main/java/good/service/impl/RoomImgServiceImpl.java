@@ -27,19 +27,36 @@ public class RoomImgServiceImpl implements IRoomImgService {
         return roomImgDao.findByRid(rid);
     }
 
+    /**
+     * 修改图片路径
+     * @param roomImg
+     */
     @Override
     public void updateRoomImg(RoomImg roomImg) {
         roomImgDao.updateRoomImg(roomImg);
     }
 
+    /**
+     * 添加图片路径
+     * @param roomImg
+     */
     @Override
     public void add(RoomImg roomImg) {
         roomImgDao.add(roomImg);
     }
 
+    /**
+     * 删除图片路径
+     * @param rid
+     */
     @Override
     public void deleteRoomImg(String rid) {
         roomImgDao.deleteRoomImg(rid);
+    }
+
+    @Override
+    public String findFirstImg(String rid) {
+        return roomImgDao.findFirstImg(rid);
     }
 
 }

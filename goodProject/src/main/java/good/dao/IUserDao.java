@@ -68,4 +68,12 @@ public interface IUserDao {
      */
     @Select("select * from user where username = #{username}")
     User findByUsername(String username);
+
+    /**
+     * 根据身份证查找用户
+     * @param IDcard
+     * @return
+     */
+    @Select("select * from user where IDcard = #{IDcard}")
+    User findByIDCard(String IDcard);
 }

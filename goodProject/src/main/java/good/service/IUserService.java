@@ -22,4 +22,6 @@ public interface IUserService {
     void deleteUser(int id);
 
     User findByUsername(String username);
+
+    boolean findByIDCard(String IDcard);
 }

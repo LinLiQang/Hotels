@@ -14,4 +14,5 @@ public interface IRoomImgService {
 
     void deleteRoomImg(String rid);
 
+    String findFirstImg(String rid);
 }

@@ -89,6 +89,20 @@
             return flag;
         }
 
+        //校验密码
+        function checkIDcard(){
+            var IDcard = $("#IDcard").val();
+            var reg_IDcard = /^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9X]$/;
+            var flag = reg_IDcard.test(IDcard);
+            if(flag){
+                $("#IDcard").css("border","2px solid green");
+                flag = true;
+            }else{
+                $("#IDcard").css("border","2px solid red");
+            }
+            return flag;
+        }
+
         $(function(){
             $("#sub").click(function(){
                 if(checkUsername() && checkTel() && checkName() && checkPassword()){
@@ -105,7 +119,7 @@
                         success:function(data){
                             if(data.flag == true){
                                 alert(data.msg);
-                                window.location.href= "";
+                                location.href= "${pageContext.request.contextPath}/user/findByUid?uid="+${user.uid};
                             }else{
                                 alert(data.msg);
                                 window.location.href= "";
@@ -120,6 +134,7 @@
             $("#tel").blur(checkTel);
             $("#name").blur(checkName);
             $("#password").blur(checkPassword);
+            $("#IDcard").blur(checkIDcard);
         });
     </script>
 
@@ -173,6 +188,11 @@
                                 <input type="text" id="name" class="form-control" value="${user.name}" name="name">
                             </div>
 
+                            <div class="col-md-2 title">身份证号</div>
+                            <div class="col-md-4 data">
+                                <input type="text" id="IDcard" class="form-control" value="${user.IDcard}" name="IDcard">
+                            </div>
+
                             <div class="col-md-2 title">性别</div>
                             <div class="col-md-4 data">
                                 <select class="form-control select2" style="width: 100%"
@@ -180,12 +200,18 @@
                                     <c:if test="${user.sex.equals('男')}">
                                         <option value="男" selected="selected">男</option>
                                         <option value="女">女</option>
+                                        <option value="保密">保密</option>
                                     </c:if>
                                     <c:if test="${user.sex.equals('女')}">
                                         <option value="男">男</option>
                                         <option value="女" selected="selected">女</option>
+                                        <option value="保密">保密</option>
                                     </c:if>
-
+                                    <c:if test="${user.sex.equals('保密')}">
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                        <option value="保密" selected="selected">保密</option>
+                                    </c:if>
                                 </select>
                             </div>
 
@@ -219,6 +245,10 @@
                                         <option value="2" selected="selected">尊贵会员</option>
                                     </c:if>
                                 </select>
+                            </div>
+
+                            <div class="col-md-2 title"></div>
+                            <div class="col-md-4 data">
                             </div>
 
                             <div class="col-md-2 title">头像名称</div>

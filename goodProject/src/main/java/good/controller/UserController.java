@@ -1,16 +1,14 @@
 package good.controller;
 
 import com.github.pagehelper.PageInfo;
-import good.domain.Comments;
 import good.domain.Orders;
 import good.domain.User;
-import good.service.ICommentsService;
 import good.service.IOrdersService;
+import good.service.IRoomImgService;
 import good.service.IUserService;
 import good.utils.JavaToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,10 +24,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 @Controller
 @RequestMapping("/user")
@@ -42,8 +37,10 @@ public class UserController {
     @Autowired
     private IOrdersService ordersService;
 
+    /**管理员操作**/
+
     /**
-     * 验证码的生成
+     * 后台登录时验证码的生成
      * @param request
      * @param response
      * @throws IOException
@@ -91,21 +88,9 @@ public class UserController {
         ImageIO.write(image,"PNG",response.getOutputStream());
     }
 
-    /**
-     * 未分页的查询所有
-     * @return
-     */
-    /*@RequestMapping("/findAll")
-    public ModelAndView findAll(){
-        ModelAndView mv = new ModelAndView();
-        List<User> users = userService.findAll();
-        mv.addObject("userList",users);
-        mv.setViewName("userList");
-        return mv;
-    }*/
 
     /**
-     * 分页查询所有用户
+     * 后台查询所有用户
      * @param page
      * @param size
      * @return
@@ -123,7 +108,7 @@ public class UserController {
     }
 
     /**
-     * 编辑用户之前查询用户信息
+     * 后台编辑用户之前查询用户信息
      * @param id
      * @return
      */
@@ -137,7 +122,7 @@ public class UserController {
     }
 
     /**
-     * 编辑用户信息
+     * 后台编辑用户信息
      * @param user
      * @return
      */
@@ -148,8 +133,7 @@ public class UserController {
         Map<String, Object> map = new HashMap<String, Object>();
         System.out.println(user);
         if(user.getUsername() != null && user.getUsername() != "" &&
-                user.getTel() != null && user.getTel() != "" &&
-                user.getName() != null && user.getName() != ""){
+                user.getTel() != null && user.getTel() != ""){
             //从数据库中找出当前用户信息
             User u = userService.findById(user.getUid());
             //获取当前项目下的头像保存路径
@@ -167,6 +151,8 @@ public class UserController {
                     }
                     photo.transferTo(photoFile);
                     user.setAvatar("Avatar/" + photoName);
+                }else{
+                    user.setAvatar(u.getAvatar());
                 }
             }else {
                 user.setAvatar(u.getAvatar());
@@ -183,45 +169,7 @@ public class UserController {
     }
 
     /**
-     * 注册用户
-     * @param user
-     * @return
-     */
-    @RequestMapping("/add")
-    @ResponseBody
-    public Map<String, Object> add(User user) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        if(user.getUsername() != null && user.getUsername() != "" &&
-                user.getPassword() != null && user.getPassword() != "" &&
-                user.getTel() != null && user.getTel() != "" &&
-                user.getName() != null && user.getName() != "") {
-            User u = userService.findByUsername(user.getUsername());
-            if(u != null){
-                map.put("flag",false);
-                map.put("msg","用户名已存在！");
-                return map;
-            }else if(!userService.findByName(user.getName())){
-                map.put("flag",false);
-                map.put("msg","此人已有账户！");
-                return map;
-            }else{
-                //设置用户默认状态为1/普通用户
-                user.setUserStatus(1);
-                user.setAvatar("Avatar/IronMan.jpg");
-                userService.add(user);
-                map.put("flag", true);
-                map.put("msg", "注册成功！");
-                return map;
-            }
-        }else{
-            map.put("flag",false);
-            map.put("msg","数据异常！");
-            return map;
-        }
-    }
-
-    /**
-     * 登录验证
+     * 后台登录验证
      * @param user
      * @param request
      * @return
@@ -273,7 +221,7 @@ public class UserController {
                 }
             }else {
                 map.put("flag", false);
-                map.put("msg", "用户不存在！请先注册！");
+                map.put("msg", "用户不存在！");
                 return map;
             }
         }else {
@@ -284,7 +232,23 @@ public class UserController {
     }
 
     /**
-     * 删除用户
+     * 后台根据uid查询用户信息及订单等具体信息
+     * @param uid
+     * @return
+     */
+    @RequestMapping("/findByUid")
+    public ModelAndView findByUid(@RequestParam(name="uid",required = true) int uid){
+        ModelAndView mv = new ModelAndView();
+        User user = userService.findById(uid);
+        List<Orders> ordersList = ordersService.findByUid(uid);
+        mv.addObject("user",user);
+        mv.addObject("ordersList",ordersList);
+        mv.setViewName("userShow");
+        return mv;
+    }
+
+    /**
+     * 后台删除用户
      * @param id
      * @return
      */
@@ -295,7 +259,7 @@ public class UserController {
     }
 
     /**
-     * 删除选中用户
+     * 后台删除选中用户
      * @param ids
      * @return
      */
@@ -313,7 +277,7 @@ public class UserController {
     }
 
     /**
-     * 退出登录
+     * 后台退出登录
      * @param request
      * @return
      */
@@ -323,8 +287,57 @@ public class UserController {
         return "login";
     }
 
+    /**管理员操作**/
+
+
+    /**用户操作**/
+
     /**
-     * 修改密码
+     * 前台注册用户
+     * @param user
+     * @return
+     */
+    @RequestMapping("/add")
+    @ResponseBody
+    public Map<String, Object> add(User user) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(user.getUsername() != null && user.getUsername() != "" &&
+                user.getPassword() != null && user.getPassword() != "" &&
+                user.getTel() != null && user.getTel() != "" &&
+                user.getName() != null && user.getName() != ""&&
+                user.getIDcard() != null && user.getIDcard() != "") {
+            User u = userService.findByUsername(user.getUsername());
+            if(u != null){
+                map.put("flag",false);
+                map.put("msg","用户名已存在！");
+                return map;
+            }else if(!userService.findByName(user.getName())){
+                map.put("flag",false);
+                map.put("msg","此人已有账户！");
+                return map;
+            }else if(!userService.findByIDCard(user.getIDcard())){
+                map.put("flag",false);
+                map.put("msg","此身份证已被注册！");
+                return map;
+            }else{
+                //设置用户默认状态为1/普通用户
+                user.setUserStatus(1);
+                user.setAvatar("Avatar/IronMan.jpg");
+                userService.add(user);
+                map.put("flag", true);
+                map.put("msg", "注册成功！");
+                return map;
+            }
+        }else{
+            map.put("flag",false);
+            map.put("msg","数据异常！");
+            return map;
+        }
+    }
+
+
+    /**
+     * 前台用户找回密码
      * @param user
      * @return
      */
@@ -352,24 +365,9 @@ public class UserController {
         }
     }
 
-    /**
-     * 根据uid查询用户信息及订单等具体信息
-     * @param uid
-     * @return
-     */
-    @RequestMapping("/findByUid")
-    public ModelAndView findByUid(@RequestParam(name="uid",required = true) int uid){
-        ModelAndView mv = new ModelAndView();
-        User user = userService.findById(uid);
-        List<Orders> ordersList = ordersService.findByUid(uid);
-        mv.addObject("user",user);
-        mv.addObject("ordersList",ordersList);
-        mv.setViewName("userShow");
-        return mv;
-    }
 
     /**
-     * 普通用户登录
+     * 前台用户登录
      * @param username
      * @param password
      * @return
@@ -416,17 +414,11 @@ public class UserController {
         }
     }
 
-
-    /*@RequestMapping("/updateUser")
-    @ResponseBody
-    public Map<String,Object> updateUser(@RequestParam(value = "photo", required = true)MultipartFile photo,
-                                         User user,HttpServletRequest request) throws Exception{
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        map.put("flag",true);
-        return map;
-    }*/
-
+    /**
+     * 前台展示用户信息
+     * @param username
+     * @return
+     */
     @RequestMapping("/userDetail")
     @ResponseBody
     public Map<String,Object> userDetail(String username){
@@ -437,7 +429,7 @@ public class UserController {
     }
 
     /**
-     * 修改密码
+     * 前台用户修改密码
      * @param uid
      * @param oldPassword
      * @param newPassword
@@ -462,5 +454,67 @@ public class UserController {
             return map;
         }
     }
+
+    /**
+     * 前台我的订单
+     * @param uid
+     * @return
+     */
+    @RequestMapping("/myOrders")
+    @ResponseBody
+    public Map<String,Object> myOrders(@RequestParam(value = "uid")int uid,
+                                       @RequestParam(value = "status")int status){
+        Map<String,Object> map = new HashMap<>();
+
+        //查询所有订单前遍历数据库修改订单状态
+        List<Orders> updateTimeOrders = ordersService.findAllToOrders();
+        Date date = new Date();
+        for(Orders order : updateTimeOrders){
+            if(order.getEndTime().compareTo(date) <= 0){
+                order.setOrdersStatus(2);
+                ordersService.updateOrders(order);
+            }
+        }
+
+        List<Orders> ordersList1 = ordersService.findToUser(uid);
+        if(status == 4){
+            map.put("ordersList",ordersList1);
+        }else if(status == 0){
+            List<Orders> ordersList = new ArrayList<>();
+            for(Orders orders : ordersList1){
+                if(orders.getOrdersStatus() == 0){
+                    ordersList.add(orders);
+                }
+            }
+            map.put("ordersList",ordersList);
+        }else if(status == 1){
+            List<Orders> ordersList = new ArrayList<>();
+            for(Orders orders : ordersList1){
+                if(orders.getOrdersStatus() == 1){
+                    ordersList.add(orders);
+                }
+            }
+            map.put("ordersList",ordersList);
+        }else if(status == 2){
+            List<Orders> ordersList = new ArrayList<>();
+            for(Orders orders : ordersList1){
+                if(orders.getOrdersStatus() == 2){
+                    ordersList.add(orders);
+                }
+            }
+            map.put("ordersList",ordersList);
+        }else if(status == 3){
+            List<Orders> ordersList = new ArrayList<>();
+            for(Orders orders : ordersList1){
+                if(orders.getOrdersStatus() == 3){
+                    ordersList.add(orders);
+                }
+            }
+            map.put("ordersList",ordersList);
+        }
+        return map;
+    }
+
+    /**用户操作**/
 
 }

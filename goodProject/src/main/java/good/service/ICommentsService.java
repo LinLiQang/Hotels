@@ -17,4 +17,6 @@ public interface ICommentsService {
     List<Comments> findByRid(String rid);
 
     List<Comments> findByRidToRoom(String rid);
+
+    void addComments(Comments comments);
 }

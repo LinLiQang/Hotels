@@ -50,10 +50,10 @@
                     success:function(data){
                         if(data.flag == true){
                             alert(data.msg);
-                            window.location.href= "";
+                            location.href="${pageContext.request.contextPath}/room/findByRid?rid="+${room.rid};
                         }else{
                             alert(data.msg);
-                            window.location.href= "";
+                            location.href="";
                         }
                     }
                 });
@@ -148,19 +148,12 @@
                                 <select class="form-control select2" style="width: 100%"
                                         name="roomStatus">
                                     <c:if test="${room.roomStatus == 0}">
-                                        <option value="0" selected="selected">正在维护中</option>
-                                        <option value="1">可预订</option>
-                                        <option value="2">已被预定</option>
+                                        <option value="0" selected="selected">正在维护</option>
+                                        <option value="1">正在运营</option>
                                     </c:if>
                                     <c:if test="${room.roomStatus == 1}">
-                                        <option value="0">正在维护中</option>
-                                        <option value="1" selected="selected">可预订</option>
-                                        <option value="2">已被预定</option>
-                                    </c:if>
-                                    <c:if test="${room.roomStatus == 2}">
-                                        <option value="0">正在维护中</option>
-                                        <option value="1">可预订</option>
-                                        <option value="2" selected="selected">已被预定</option>
+                                        <option value="0">正在维护</option>
+                                        <option value="1" selected="selected">正在运营</option>
                                     </c:if>
                                 </select>
                             </div>

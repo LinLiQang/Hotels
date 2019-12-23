@@ -18,7 +18,7 @@ public class OrderServiceImpl implements IOrdersService {
     private IOrdersDao ordersDao;
 
     /**
-     * 查询所有
+     * 后台查询所有订单
      * @return
      */
     @Override
@@ -37,7 +37,7 @@ public class OrderServiceImpl implements IOrdersService {
     }
 
     /**
-     * 根据id查询
+     * 根据oid查询订单
      * @param oid
      * @return
      */
@@ -47,7 +47,7 @@ public class OrderServiceImpl implements IOrdersService {
     }
 
     /**
-     * 修改订单
+     * 后台修改订单
      * @param orders
      */
     @Override
@@ -65,12 +65,12 @@ public class OrderServiceImpl implements IOrdersService {
     }
 
     /**
-     * 查询所有订单
+     * 查询所有房间时检测不可预定房间
      * @return
      */
     @Override
     public List<Orders> findAllToOrders() {
-        return ordersDao.findAll();
+        return ordersDao.findAllToOrders();
     }
 
     /**
@@ -91,5 +91,24 @@ public class OrderServiceImpl implements IOrdersService {
     @Override
     public List<Orders> findByRid(String rid) {
         return ordersDao.findByRid(rid);
+    }
+
+    /**
+     * 生成订单时检测是否冲突
+     * @return
+     */
+    @Override
+    public List<Orders> findAllForOrders() {
+        return ordersDao.findAll();
+    }
+
+    @Override
+    public List<Orders> findToUser(int uid) {
+        return ordersDao.findToUser(uid);
+    }
+
+    @Override
+    public void cancelOrders(String oid) {
+        ordersDao.cancelOrders(oid);
     }
 }

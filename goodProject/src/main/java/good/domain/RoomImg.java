@@ -7,13 +7,13 @@ import java.io.Serializable;
  */
 public class RoomImg implements Serializable {
 
-    private int  imgid;
-    private String rid;
-    private String firstImg;
-    private String secondImg;
-    private String thirdImg;
-    private String forthImg;
-    private String fifthImg;
+    private int  imgid;             //房间照片id
+    private String rid;             //房间id
+    private String firstImg;        //第一张照片
+    private String secondImg;       //第二张照片
+    private String thirdImg;        //第三张照片
+    private String forthImg;        //第四张照片
+    private String fifthImg;        //第五张照片
 
     public int getImgid() {
         return imgid;

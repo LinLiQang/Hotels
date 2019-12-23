@@ -99,5 +99,20 @@ public class UserServiceImpl implements IUserService {
         return userDao.findByUsername(username);
     }
 
+    /**
+     * 根据身份证号查找用户
+     * @param IDcard
+     * @return
+     */
+    @Override
+    public boolean findByIDCard(String IDcard) {
+        User user = userDao.findByIDCard(IDcard);
+        if (user == null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 }

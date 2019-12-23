@@ -126,9 +126,8 @@
                             <div class="col-md-4 data">
                                 <select class="form-control select2" style="width: 100%"
                                         name="roomStatus">
-                                    <option value="0" selected="selected">正在维修中</option>
-                                    <option value="1">可预订</option>
-                                    <option value="2">已被预订</option>
+                                    <option value="0" selected="selected">正在维修</option>
+                                    <option value="1">正在运营</option>
                                 </select>
                             </div>
 

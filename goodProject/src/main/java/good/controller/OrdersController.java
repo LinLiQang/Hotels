@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.ParseException;
 import java.util.*;
 
 @Controller
@@ -32,14 +31,27 @@ public class OrdersController {
     @Autowired
     private IRoomImgService roomImgService;
 
+    /**管理员操作**/
+
     /**
-     * 查询所有订单
+     * 后台查询所有订单
      * @return
      */
     @RequestMapping("/findAll")
     public ModelAndView findAll(@RequestParam(name = "page",required = true, defaultValue = "1")int page,
                                 @RequestParam(name = "size",required = true, defaultValue = "5")int size){
         ModelAndView mv = new ModelAndView();
+
+        //查询所有订单前遍历数据库修改订单状态
+        List<Orders> updateTimeOrders = ordersService.findAllToOrders();
+        Date date = new Date();
+        for(Orders order : updateTimeOrders){
+            if(order.getEndTime().compareTo(date) <= 0){
+                order.setOrdersStatus(2);
+                ordersService.updateOrders(order);
+            }
+        }
+
         List<Orders> orders = ordersService.findAll(page,size);
         PageInfo pageInfo = new PageInfo(orders);
         mv.addObject("ordersList",pageInfo);
@@ -48,12 +60,12 @@ public class OrdersController {
     }
 
     /**
-     * 根据ID查询订单
+     * 后台根据ID查询订单
      * @param oid
      * @return
      */
     @RequestMapping("/findById")
-    public ModelAndView findById(@RequestParam(name="id",required = true) String oid){
+    public ModelAndView findById(@RequestParam(name="oid",required = true) String oid){
         ModelAndView mv = new ModelAndView();
         Orders orders = ordersService.findById(oid);
         mv.addObject("orders",orders);
@@ -62,7 +74,7 @@ public class OrdersController {
     }
 
     /**
-     * 修改订单前查询订单原来的信息
+     * 后台修改订单前查询订单原来的信息
      * @param id
      * @return
      */
@@ -78,7 +90,7 @@ public class OrdersController {
     }
 
     /**
-     * 修改订单信息
+     * 后台修改订单信息
      * @param orders
      * @return
      */
@@ -98,7 +110,7 @@ public class OrdersController {
     }
 
     /**
-     * 根据oid删除订单
+     * 后台根据oid删除订单
      * @param id
      * @return
      */
@@ -109,7 +121,7 @@ public class OrdersController {
     }
 
     /**
-     * 删除选中的订单
+     * 后台删除选中的订单
      * @param ids
      * @return
      */
@@ -127,7 +139,7 @@ public class OrdersController {
 
 
     /**
-     * 添加订单
+     * 后台添加订单
      * @param orders
      * @return
      */
@@ -142,61 +154,64 @@ public class OrdersController {
         return map;
     }
 
-    /**
-     * 用户根据需求查询符合的客房
-     * @param startTime
-     * @param endTime
-     * @param type
-     * @throws ParseException
-     */
-    /*@RequestMapping("/toOrders")
-    public Map<String,Object> findToOrders(@RequestParam(value = "startTime")String startTime,
-                             @RequestParam(value = "endTime")String endTime,
-                             @RequestParam(value = "type")int type) throws ParseException {
-        Map<String,Object> map = new HashMap<String, Object>();
-        Date startTime1 = DateUtils.stringToDate(startTime,"yyyy-MM-dd");
-        Date endTime1 = DateUtils.stringToDate(endTime,"yyyy-MM-dd");
+    /**管理员操作**/
 
-        //从订单表中查出时间重复的房间
+
+    /**用户操作**/
+
+    /**
+     * 用户预定客房
+     * @return
+     */
+    @RequestMapping("/toOrders")
+    @ResponseBody
+    public Map<String, Object> ToOrders(Orders orders){
+        Map<String, Object> map = new HashMap<String, Object>();
         List<Orders> ordersList = ordersService.findAllToOrders();
-        List<Room> noRoom = new ArrayList<Room>();
-        for(Orders orders : ordersList){
-            if(startTime1.compareTo(orders.getStartTime())>0 && startTime1.compareTo(orders.getEndTime())<0 && orders.getOrdersStatus() == 1){
-                noRoom.add(orders.getRoom());
-            }else if(endTime1.compareTo(orders.getStartTime())>0 && endTime1.compareTo(orders.getEndTime())<0 && orders.getOrdersStatus() == 1){
-                noRoom.add(orders.getRoom());
-            }else if(startTime1.compareTo(orders.getStartTime())<0 && endTime1.compareTo(orders.getEndTime())>0 && orders.getOrdersStatus() == 1){
-                noRoom.add(orders.getRoom());
+        Boolean boo = true;
+        for(Orders order : ordersList){
+            if(orders.getStartTime().compareTo(order.getStartTime())>=0 && orders.getStartTime().compareTo(order.getEndTime())<=0 &&
+               orders.getRid().equals(order.getRid()) && order.getOrdersStatus() == 1){
+                boo = false;
+            }
+            if(orders.getEndTime().compareTo(order.getStartTime())>=0 && orders.getEndTime().compareTo(order.getEndTime())<=0 &&
+                    orders.getRid().equals(order.getRid()) && order.getOrdersStatus() == 1){
+                boo = false;
+            }
+            if(orders.getStartTime().compareTo(order.getStartTime())<=0 && orders.getEndTime().compareTo(order.getEndTime())>=0 &&
+                    orders.getRid().equals(order.getRid()) && order.getOrdersStatus() == 1){
+                boo = false;
             }
         }
-        //除去重复的房间
-        HashSet set = new HashSet(noRoom);
-        noRoom.clear();
-        noRoom.addAll(set);
-        //查出所有房间并找出符合类型的房间
-        List<Room> roomList = roomService.findAllToOrders();
-        List<Room> rooms = new ArrayList<Room>();
-        for(Room room : roomList){
-            if(room.getType() == type){
-                rooms.add(room);
-            }
-        }
-        *//*此处需要在room实体类中重写hashCode()和equals()方法
-        * 实现去除符合类型房间集合中时间不符合的房间*//*
-        rooms.removeAll(noRoom);
-        //遍历所有符合要求的可用房间集合
-        for(Room room : rooms){
-            room.setRoomImg(roomImgService.findByRid(room.getRid()));
-            System.out.println(room);
-        }
-        if(rooms != null) {
-            map.put("roomList", rooms);
+        if(boo){
+            String id = RandomUtils.idRandom();
+            orders.setOid(id);
+            orders.setOrdersStatus(1);
+            ordersService.add(orders);
+            map.put("flag", true);
+            map.put("msg", "添加成功！");
             return map;
         }else{
-            map.put("msg","当前时间段无您需要的房间!请您再考虑一下！");
+            map.put("flag",false);
+            map.put("msg","当前时段该房间被预定！");
             return map;
         }
-    }*/
+    }
 
+    /**
+     * 取消订单
+     * @param oid
+     * @return
+     */
+    @RequestMapping(value = "/cancelOrders")
+    @ResponseBody
+    public Map<String, Object> cancelOrders(String oid){
+        Map<String, Object> map = new HashMap<>();
+        ordersService.cancelOrders(oid);
+        map.put("flag",true);
+        map.put("msg","退订成功！");
+        return map;
+    }
+    /**用户操作**/
 
 }

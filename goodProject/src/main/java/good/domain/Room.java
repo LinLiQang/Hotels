@@ -13,9 +13,9 @@ public class Room implements Serializable {
     private Double roomPrice;       //客房价格
     private int type;               //客房类型 1单人房 2双人房 3豪华房 4家庭房
     private String typeStr;         //客房类型格式转换
-    private int roomStatus;         //客房状态 0正在维修中 1可预订 2已被预订
+    private int roomStatus;         //客房状态 0正在维修 1正在运营
     private String roomStatusStr;   //客房状态格式转换
-    private RoomImg roomImg;
+    private RoomImg roomImg;        //房间照片
 
     public String getRid() {
         return rid;
@@ -87,13 +87,10 @@ public class Room implements Serializable {
 
     public String getRoomStatusStr() {
         if(this.getRoomStatus() == 0){
-            roomStatusStr = "正在维修中";
+            roomStatusStr = "正在维修";
         }
         if(this.getRoomStatus() == 1){
-            roomStatusStr = "可预订";
-        }
-        if(this.getRoomStatus() == 2){
-            roomStatusStr = "已被预订";
+            roomStatusStr = "正在运营";
         }
         return roomStatusStr;
     }

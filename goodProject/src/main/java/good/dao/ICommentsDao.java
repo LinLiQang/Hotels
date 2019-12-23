@@ -93,4 +93,11 @@ public interface ICommentsDao {
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
     })
     List<Comments> findByRidToRoom(String rid);
+
+    /**
+     * 添加评论
+     * @param comments
+     */
+    @Insert("insert into comments(comment,commentTime,uid,rid,oid) values(#{comment},#{commentTime},#{uid},#{rid},#{oid})")
+    void addComments(Comments comments);
 }

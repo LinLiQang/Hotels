@@ -9,6 +9,7 @@ public class User implements Serializable {
     private int uid;                //用户id
     private String username;        //用户账号
     private String name;            //用户真实姓名
+    private String IDcard;          //身份证号
     private String sex;             //用户性别
     private String password;        //用户密码
     private String avatar;          //用户头像
@@ -62,6 +63,14 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIDcard() {
+        return IDcard;
+    }
+
+    public void setIDcard(String IDcard) {
+        this.IDcard = IDcard;
     }
 
     public String getSex() {

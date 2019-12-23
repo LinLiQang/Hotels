@@ -11,7 +11,7 @@ import java.util.List;
 public interface IOrdersDao {
 
     /**
-     * 查询所有
+     * 查询订单所有信息包括相关具体信息
      * @return
      */
     @Select("select * from orders")
@@ -102,4 +102,38 @@ public interface IOrdersDao {
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
     })
     List<Orders> findByRid(String rid);
+
+    /**
+     * 根据uid查询所有订单
+     * @param uid
+     * @return
+     */
+    @Select("select * from orders where uid = #{uid}")
+    @Results({
+            @Result(id = true, property = "oid", column = "oid"),
+            @Result(property = "startTime", column = "startTime"),
+            @Result(property = "endTime", column = "endTime"),
+            @Result(property = "ordersPrice", column = "ordersPrice"),
+            @Result(property = "ordersStatus", column = "ordersStatus"),
+            @Result(property = "startTime", column = "startTime"),
+            @Result(property = "rid", column = "rid"),
+            @Result(property = "type", column = "rid",javaType = int.class, one = @One(select = "good.dao.IRoomDao.findToType")),
+            @Result(property = "firstImg", column = "rid", javaType = String.class, one = @One(select = "good.dao.IRoomImgDao.findFirstImg")),
+            @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
+    })
+    List<Orders> findToUser(int uid);
+
+    /**
+     * 为了查询可用房间查询所有订单
+     * @return
+     */
+    @Select("select * from orders ")
+    List<Orders> findAllToOrders();
+
+    /**
+     * 取消订单，修改订单状态
+     * @param oid
+     */
+    @Update("update orders set ordersStatus = 0 where oid = #{oid}")
+    void cancelOrders(String oid);
 }

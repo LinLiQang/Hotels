@@ -136,7 +136,7 @@
                                         <td class="text-center">${orders.ordersStatusStr}</td>
 
                                         <td class="text-center">
-                                            <button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/orders/findById?id=${orders.oid}'">详情</button>
+                                            <button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/orders/findById?oid=${orders.oid}'">详情</button>
                                             <button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/orders/beforeUpdateOrders?id=${orders.oid}'">编辑</button>
                                             <button type="button" class="btn bg-olive btn-xs" onclick="deleteOrders('${orders.oid}')">删除</button>
                                         </td>

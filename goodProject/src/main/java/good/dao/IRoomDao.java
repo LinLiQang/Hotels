@@ -25,7 +25,7 @@ public interface IRoomDao {
 
 
     /**
-     * 根据id查询客房信息
+     * 根据rid查询客房信息
      * @param id
      * @return
      */
@@ -33,19 +33,39 @@ public interface IRoomDao {
     Room findById(String id);
 
     /**
-     * 更新客房信息
+     * 修改客房信息
      * @param room
      */
     @Update("update room set rid = #{rid}, introduction = #{introduction}, detail = #{detail}, roomPrice = #{roomPrice}, roomStatus = #{roomStatus}, type = #{type} where rid = #{rid}")
     void updateRoom(Room room);
 
     /**
-     * 根据id删除客房
+     * 根据rid删除客房
      * @param id
      */
     @Delete("delete from room where rid = #{id}")
     void deleteRoom(String id);
 
-    @Select("select * from room where type = #{type}")
+    /**
+     * 根据房间类型和房间状态查找房间
+     * @param type
+     * @return
+     */
+    @Select("select * from room where type = #{type} and roomStatus != 0")
     List<Room> findByType(int type);
+
+    /**
+     * 查找房间状态为正在运营的房间
+     * @return
+     */
+    @Select("select * from room where roomStatus != 0")
+    List<Room> findStatus();
+
+    /**
+     * 根据rid确认type
+     * @param rid
+     * @return
+     */
+    @Select("select type from room where rid = #{rid}")
+    int findToType(String rid);
 }

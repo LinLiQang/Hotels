@@ -40,9 +40,9 @@
         $(function(){
             $("#sub").click(function(){
                 $.post("${pageContext.request.contextPath}/orders/updateOrders",$("form").serialize(),function(data){
-                    if(data.flag){
+                    if(data.flag == true){
                         alert(data.msg);
-                        location.href="${pageContext.request.contextPath}/orders/findAll";
+                        location.href="${pageContext.request.contextPath}/orders/findById?oid=${orders.oid}";
                     }else{
                         alert(data.msg);
                     }
@@ -108,23 +108,23 @@
                                         <option value="2">已完成</option>
                                         <option value="3">已评论</option>
                                     </c:if>
-                                    <c:if test="${orders.ordersStatus == 0}">
-                                        <option value="0" selected="selected">已取消</option>
-                                        <option value="1">正在进行</option>
+                                    <c:if test="${orders.ordersStatus == 1}">
+                                        <option value="0">已取消</option>
+                                        <option value="1" selected="selected">正在进行</option>
                                         <option value="2">已完成</option>
                                         <option value="3">已评论</option>
                                     </c:if>
-                                    <c:if test="${orders.ordersStatus == 0}">
-                                        <option value="0" selected="selected">已取消</option>
+                                    <c:if test="${orders.ordersStatus == 2}">
+                                        <option value="0">已取消</option>
                                         <option value="1">正在进行</option>
-                                        <option value="2">已完成</option>
+                                        <option value="2" selected="selected">已完成</option>
                                         <option value="3">已评论</option>
                                     </c:if>
-                                    <c:if test="${orders.ordersStatus == 0}">
-                                        <option value="0" selected="selected">已取消</option>
+                                    <c:if test="${orders.ordersStatus == 3}">
+                                        <option value="0">已取消</option>
                                         <option value="1">正在进行</option>
                                         <option value="2">已完成</option>
-                                        <option value="3">已评论</option>
+                                        <option value="3" selected="selected">已评论</option>
                                     </c:if>
 
                                 </select>

@@ -29,10 +29,10 @@
                     //alert(data.flag);
                     if(data.flag){
                         alert(data.msg);
-                        location.href="home.jsp";
+                        location.href="${pageContext.request.contextPath}/pages/home.jsp";
                     }else{
                         alert(data.msg);
-                        location.href="login.jsp";
+                        location.href="${pageContext.request.contextPath}/pages/login.jsp";
                     }
                 },'json');
             })
@@ -76,8 +76,6 @@
             </div>
         </form>
 
-        <a href="${pageContext.request.contextPath}/pages/findPassword.jsp">忘记密码</a>
-        <a href="${pageContext.request.contextPath}/pages/register.jsp" class="text-center" style="float: right">新用户注册</a>
     </div>
 
 </div>

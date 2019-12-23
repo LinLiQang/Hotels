@@ -78,4 +78,9 @@ public class CommentsServiceImpl implements ICommentsService {
     public List<Comments> findByRidToRoom(String rid) {
         return commentsDao.findByRidToRoom(rid);
     }
+
+    @Override
+    public void addComments(Comments comments) {
+        commentsDao.addComments(comments);
+    }
 }

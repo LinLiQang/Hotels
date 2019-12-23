@@ -39,7 +39,7 @@
 	<script>
 		$(function(){
 			$("#sub").click(function(){
-				$.post("${pageContext.request.contextPath}/orders/toOrders",$("form").serialize(),function(data){
+				$.post("${pageContext.request.contextPath}/room/findAllRoomByType",$("form").serialize(),function(data){
 					if(data.flag){
 						alert(data.msg);
 						location.href="${pageContext.request.contextPath}/orders/findAll";
@@ -95,7 +95,7 @@
 						<div class="col-md-4 data">
 							<select class="form-control select2" style="width: 100%"
 									name="type">
-								<option value="1" selected="selected">单人房</option>
+								<option value="0" selected="selected">单人房</option>
 								<option value="2">双人房</option>
 								<option value="3">豪华房</option>
 								<option value="4">家庭房</option>

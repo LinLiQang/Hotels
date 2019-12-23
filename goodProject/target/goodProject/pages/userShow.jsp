@@ -102,6 +102,9 @@
 						<div class="col-md-2 title">用户姓名</div>
 						<div class="col-md-4 data text">${user.name}</div>
 
+						<div class="col-md-2 title">用户身份证</div>
+						<div class="col-md-4 data text">${user.IDcard}</div>
+
 						<div class="col-md-2 title">用户性别</div>
 						<div class="col-md-4 data text">${user.sex}</div>
 
@@ -116,6 +119,9 @@
 
 						<div class="col-md-2 title">头像图片路径</div>
 						<div class="col-md-4 data text">${user.avatar}</div>
+
+						<div class="col-md-2 title"></div>
+						<div class="col-md-4 data text"></div>
 
 					</div>
 				</div>
