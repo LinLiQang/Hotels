@@ -27,4 +27,8 @@ public interface IOrdersService {
     List<Orders> findToUser(int uid);
 
     void cancelOrders(String oid);
+
+    void updateStatus(String oid);
+
+    void updateStatusTime(String oid);
 }

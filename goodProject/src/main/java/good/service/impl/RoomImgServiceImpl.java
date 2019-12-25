@@ -54,6 +54,11 @@ public class RoomImgServiceImpl implements IRoomImgService {
         roomImgDao.deleteRoomImg(rid);
     }
 
+    /**
+     * 根据rid查询第一张图片
+     * @param rid
+     * @return
+     */
     @Override
     public String findFirstImg(String rid) {
         return roomImgDao.findFirstImg(rid);

@@ -9,12 +9,12 @@ public class User implements Serializable {
     private int uid;                //用户id
     private String username;        //用户账号
     private String name;            //用户真实姓名
-    private String IDcard;          //身份证号
+    private String idCard;          //身份证号
     private String sex;             //用户性别
     private String password;        //用户密码
     private String avatar;          //用户头像
     private String tel;             //用户手机号
-    private int userStatus;         //用户状态 0被封禁 1普通用户 2会员 3管理员
+    private int userStatus;         //用户状态 0被封禁 1普通用户 2管理员
     private String userStatusStr;   //用户状态格式转换
 
     public int getUid() {
@@ -65,12 +65,12 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getIDcard() {
-        return IDcard;
+    public String getIdCard() {
+        return idCard;
     }
 
-    public void setIDcard(String IDcard) {
-        this.IDcard = IDcard;
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 
     public String getSex() {
@@ -95,8 +95,6 @@ public class User implements Serializable {
         }else if(this.getUserStatus() == 1){
             userStatusStr = "普通用户";
         }else if(this.getUserStatus() == 2){
-            userStatusStr = "会员";
-        }else{
             userStatusStr = "管理员";
         }
         return userStatusStr;

@@ -79,6 +79,10 @@ public class CommentsServiceImpl implements ICommentsService {
         return commentsDao.findByRidToRoom(rid);
     }
 
+    /**
+     * 添加评论
+     * @param comments
+     */
     @Override
     public void addComments(Comments comments) {
         commentsDao.addComments(comments);

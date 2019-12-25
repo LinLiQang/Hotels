@@ -16,6 +16,7 @@ public class Comments implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date commentTime;       //评论时间
     private String commentTimeStr;  //评论时间的格式转换
+    private Double star;            //用户给出星数
     private int uid;                //评论用户id
     private String rid;             //评论房间id
     private String oid;             //评论订单id
@@ -56,6 +57,14 @@ public class Comments implements Serializable {
 
     public void setCommentTimeStr(String commentTimeStr) {
         this.commentTimeStr = commentTimeStr;
+    }
+
+    public Double getStar() {
+        return star;
+    }
+
+    public void setStar(Double star) {
+        this.star = star;
     }
 
     public int getUid() {

@@ -56,6 +56,58 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+
+	<style>
+		.bg_position{
+			position: absolute;
+			top: 420px;
+			left: 565px;
+			z-index: -1;
+		}
+		.bg_position1{
+			position: absolute;
+			top: 420px;
+			left: 780px;
+			z-index: -1;
+		}
+		.bg_position2{
+			position: absolute;
+			top: 420px;
+			left: 1000px;
+			z-index: -1;
+		}
+		.bg_position3{
+			position: absolute;
+			top: 420px;
+			left: 1215px;
+			z-index: -1;
+		}
+		.bg_position4{
+			position: absolute;
+			top: 420px;
+			left: 1435px;
+			z-index: -1;
+		}
+		.panel img {
+			width: 200px;
+			height: 150px;
+		}
+	</style>
+	<script>
+		function show_picture(){
+			var bg = document.getElementsByClassName("bg");
+			for (var i = 0; i < bg.length; i++) {
+				bg[i].style.zIndex=2;
+			}
+		}
+		function disappear_bg() {
+			var bg = document.getElementsByClassName("bg");
+			for (var i = 0; i < bg.length; i++) {
+				bg[i].style.zIndex=-1;
+			}
+		}
+	</script>
+
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -87,7 +139,7 @@
 			<!-- 内容头部 /-->
 
 			<!-- 正文区域 -->
-			<section class="content">
+			<section class="content"  onclick="disappear_bg()">
 				<!--用户信息-->
 				<div class="panel panel-default">
 					<div class="panel-heading">用户信息</div>
@@ -128,11 +180,28 @@
 
 						<div class="col-md-2 title rowHeight2x">客房图片路径</div>
 						<div class="col-md-10 data text rowHeight2x">
+							<button type="button" class="btn bg-default" onclick="show_picture(); event.cancelBubble=true" >看图</button>
                             图片一：${roomImg.firstImg}；
                             图片二：${roomImg.secondImg}；
                             图片三：${roomImg.thirdImg}；
                             图片四：${roomImg.forthImg}；
-                            图片五：${roomImg.fifthImg}</div>
+                            图片五：${roomImg.fifthImg}
+						</div>
+						<div class="bg bg_position">
+							<img src="${pageContext.request.contextPath}/${roomImg.firstImg}">
+						</div>
+						<div class="bg bg_position1">
+							<img src="${pageContext.request.contextPath}/${roomImg.secondImg}">
+						</div>
+						<div class="bg bg_position2">
+							<img src="${pageContext.request.contextPath}/${roomImg.thirdImg}">
+						</div>
+						<div class="bg bg_position3">
+							<img src="${pageContext.request.contextPath}/${roomImg.forthImg}">
+						</div>
+						<div class="bg bg_position4">
+							<img src="${pageContext.request.contextPath}/${roomImg.fifthImg}">
+						</div>
 
 						<%--<div class="col-md-2 title"></div>--%>
 						<%--<div class="col-md-6 data text"></div>--%>

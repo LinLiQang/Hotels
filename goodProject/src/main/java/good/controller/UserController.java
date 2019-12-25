@@ -131,40 +131,55 @@ public class UserController {
     public Map<String, Object> updateUser(@RequestParam(name = "photo",required = false) MultipartFile photo,
                                           User user,HttpServletRequest request) throws IOException{
         Map<String, Object> map = new HashMap<String, Object>();
-        System.out.println(user);
-        if(user.getUsername() != null && user.getUsername() != "" &&
-                user.getTel() != null && user.getTel() != ""){
-            //从数据库中找出当前用户信息
-            User u = userService.findById(user.getUid());
-            //获取当前项目下的头像保存路径
-            String uploadTargetPath = request.getSession().getServletContext().getRealPath("/") + "Avatar\\";
 
-            //判断是否修改头像
-            //是--保存图片，修改数据库存储信息
-            //否--保存原来图片信息
-            if(photo != null) {
-                if (!photo.isEmpty()) {
-                    String photoName = photo.getOriginalFilename();
-                    File photoFile = new File(uploadTargetPath, photoName);
-                    if (!photoFile.exists()) {
-                        new File(uploadTargetPath).mkdirs();
-                    }
-                    photo.transferTo(photoFile);
-                    user.setAvatar("Avatar/" + photoName);
-                }else{
-                    user.setAvatar(u.getAvatar());
-                }
-            }else {
-                user.setAvatar(u.getAvatar());
-            }
-            userService.editUser(user);
-            map.put("flag", true);
-            map.put("msg", "修改成功！");
+        //从数据库中找出所有人员并且判断当前修改的用户名是否会重名
+        //如果用户名和真实姓名相同，则判定为同一人，不重名
+        //如果用户名和真实姓名不同，则判定为不同的人，重名
+        List<User> userList = userService.findAllToCheck();
+        boolean flag = true;
+        for(User user1 : userList){
+            if(user1.getUsername().equals(user.getUsername()) && !user1.getName().equals(user.getName()))
+                flag = false;
+        }
+        if(flag == false) {
+            map.put("flag",false);
+            map.put("msg","用户名已存在！");
             return map;
         }else{
-            map.put("flag",false);
-            map.put("msg","数据异常！");
-            return map;
+            if(user.getUsername() != null && user.getUsername() != "" &&
+                    user.getTel() != null && user.getTel() != ""){
+                //从数据库中找出当前用户信息
+                User u = userService.findById(user.getUid());
+                //获取当前项目下的头像保存路径
+                String uploadTargetPath = request.getSession().getServletContext().getRealPath("/") + "Avatar\\";
+
+                //判断是否修改头像
+                //是--保存图片，修改数据库存储信息
+                //否--保存原来图片信息
+                if(photo != null) {
+                    if (!photo.isEmpty()) {
+                        String photoName = photo.getOriginalFilename();
+                        File photoFile = new File(uploadTargetPath, photoName);
+                        if (!photoFile.exists()) {
+                            new File(uploadTargetPath).mkdirs();
+                        }
+                        photo.transferTo(photoFile);
+                        user.setAvatar("Avatar/" + photoName);
+                    }else{
+                        user.setAvatar(u.getAvatar());
+                    }
+                }else {
+                    user.setAvatar(u.getAvatar());
+                }
+                userService.editUser(user);
+                map.put("flag", true);
+                map.put("msg", "修改成功！");
+                return map;
+            }else{
+                map.put("flag",false);
+                map.put("msg","数据异常！");
+                return map;
+            }
         }
     }
 
@@ -196,7 +211,7 @@ public class UserController {
             if (u != null) {
                 //判断用户是否被封禁
                 if (u.getUserStatus() != 0) {
-                    if(u.getUserStatus() == 3) {
+                    if(u.getUserStatus() == 2) {
                         //判断密码是否正确
                         if (u.getPassword().equals(user.getPassword())) {
                             //存入新的姓名
@@ -301,11 +316,8 @@ public class UserController {
     @ResponseBody
     public Map<String, Object> add(User user) {
         Map<String, Object> map = new HashMap<String, Object>();
-        if(user.getUsername() != null && user.getUsername() != "" &&
-                user.getPassword() != null && user.getPassword() != "" &&
-                user.getTel() != null && user.getTel() != "" &&
-                user.getName() != null && user.getName() != ""&&
-                user.getIDcard() != null && user.getIDcard() != "") {
+        if(!user.getUsername().isEmpty() && !user.getPassword().isEmpty() && !user.getTel().isEmpty() &&
+                !user.getName().isEmpty() && !user.getIdCard().isEmpty()) {
             User u = userService.findByUsername(user.getUsername());
             if(u != null){
                 map.put("flag",false);
@@ -315,7 +327,7 @@ public class UserController {
                 map.put("flag",false);
                 map.put("msg","此人已有账户！");
                 return map;
-            }else if(!userService.findByIDCard(user.getIDcard())){
+            }else if(!userService.findByIDCard(user.getIdCard())){
                 map.put("flag",false);
                 map.put("msg","此身份证已被注册！");
                 return map;
@@ -471,11 +483,11 @@ public class UserController {
         Date date = new Date();
         for(Orders order : updateTimeOrders){
             if(order.getEndTime().compareTo(date) <= 0){
-                order.setOrdersStatus(2);
-                ordersService.updateOrders(order);
+                ordersService.updateStatusTime(order.getOid());
             }
         }
-
+        //从数据库中找出所有订单
+        //根据前台的给的status判断需要返回的订单类型
         List<Orders> ordersList1 = ordersService.findToUser(uid);
         if(status == 4){
             map.put("ordersList",ordersList1);

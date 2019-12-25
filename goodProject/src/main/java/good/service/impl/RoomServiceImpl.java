@@ -120,6 +120,12 @@ public class RoomServiceImpl implements IRoomService {
         return roomDao.findAll();
     }
 
+    /**
+     * 向后台返回所有房间信息
+     * @param page
+     * @param size
+     * @return
+     */
     @Override
     public List<Room> findAllToAdmin(int page, int size) {
         PageHelper.startPage(page,size);

@@ -24,4 +24,6 @@ public interface IUserService {
     User findByUsername(String username);
 
     boolean findByIDCard(String IDcard);
+
+    List<User> findAllToCheck();
 }

@@ -299,7 +299,7 @@
 
         function changePageSize() {
             var pageSize = $("#changePageSize").val();
-            location.href = "${pageContext.request.contextPath}/room/findAll?page=1&size=" + pageSize;
+            location.href = "${pageContext.request.contextPath}/comments/findAll?page=1&size=" + pageSize;
         }
 
         $(document).ready(function() {

@@ -14,7 +14,7 @@ public interface IUserDao {
      * 添加用户
      * @param user
      */
-    @Insert("insert into user(username,name,sex,password,avatar,tel,userStatus) values(#{username},#{name},#{sex},#{password},#{avatar},#{tel},#{userStatus})")
+    @Insert("insert into user(username,name,sex,password,avatar,tel,userStatus,idCard) values(#{username},#{name},#{sex},#{password},#{avatar},#{tel},#{userStatus},#{idCard})")
     void add(User user);
 
     /**
@@ -41,7 +41,7 @@ public interface IUserDao {
     User findById(int id);
 
     /**
-     * 修改用户信息
+     * 修改用户密码
      * @param user
      */
     @Update("update user set name = #{name}, username = #{username}, password = #{password}, avatar = #{avatar}, sex = #{sex}, tel = #{tel}, userStatus = #{userStatus} WHERE uid = #{uid}")
@@ -71,9 +71,9 @@ public interface IUserDao {
 
     /**
      * 根据身份证查找用户
-     * @param IDcard
+     * @param idCard
      * @return
      */
-    @Select("select * from user where IDcard = #{IDcard}")
-    User findByIDCard(String IDcard);
+    @Select("select * from user where idCard = #{idCard}")
+    User findByIDCard(String idCard);
 }

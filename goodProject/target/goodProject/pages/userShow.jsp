@@ -56,6 +56,28 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+	<style>
+		.bg_position{
+			position: absolute;
+			top: 160px;
+			left: 750px;
+			z-index: -1;
+		}
+		.bg_position img {
+			width: 200px;
+			height: 200px;
+		}
+	</style>
+	<script>
+		function show_picture(){
+			var bg = document.getElementById("bg");
+			bg.style.zIndex=2;
+		}
+		function disappear_bg() {
+			var bg = document.getElementById("bg");
+			bg.style.zIndex= -1;
+		}
+	</script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -87,7 +109,7 @@
 			<!-- 内容头部 /-->
 
 			<!-- 正文区域 -->
-			<section class="content">
+			<section class="content" onclick="disappear_bg()">
 				<!--用户信息-->
 				<div class="panel panel-default">
 					<div class="panel-heading">用户信息</div>
@@ -103,7 +125,7 @@
 						<div class="col-md-4 data text">${user.name}</div>
 
 						<div class="col-md-2 title">用户身份证</div>
-						<div class="col-md-4 data text">${user.IDcard}</div>
+						<div class="col-md-4 data text">${user.idCard}</div>
 
 						<div class="col-md-2 title">用户性别</div>
 						<div class="col-md-4 data text">${user.sex}</div>
@@ -118,8 +140,13 @@
 						<div class="col-md-4 data text">${user.userStatusStr}</div>
 
 						<div class="col-md-2 title">头像图片路径</div>
-						<div class="col-md-4 data text">${user.avatar}</div>
-
+						<div class="col-md-4 data text">
+							<button type="button" class="btn bg-default" onclick="show_picture(); event.cancelBubble=true" >查看图片</button>
+							${user.avatar}
+						</div>
+						<div class="bg_position" id="bg">
+							<img src="${pageContext.request.contextPath}/${user.avatar}">
+						</div>
 						<div class="col-md-2 title"></div>
 						<div class="col-md-4 data text"></div>
 

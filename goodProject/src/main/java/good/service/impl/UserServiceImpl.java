@@ -67,7 +67,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * 修改用户
+     * 修改密码
      * @param user
      */
     @Override
@@ -75,6 +75,10 @@ public class UserServiceImpl implements IUserService {
         userDao.updateUser(user);
     }
 
+    /**
+     * 修改用户信息
+     * @param user
+     */
     @Override
     public void editUser(User user) {
         userDao.editUser(user);
@@ -112,6 +116,15 @@ public class UserServiceImpl implements IUserService {
         }else{
             return false;
         }
+    }
+
+    /**
+     * 为修改用户时返回所有用户
+     * @return
+     */
+    @Override
+    public List<User> findAllToCheck() {
+        return userDao.findAll();
     }
 
 

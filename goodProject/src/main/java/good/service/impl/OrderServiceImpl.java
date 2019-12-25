@@ -102,13 +102,40 @@ public class OrderServiceImpl implements IOrdersService {
         return ordersDao.findAll();
     }
 
+    /**
+     * 为前台用户查看订单返回订单
+     * @param uid
+     * @return
+     */
     @Override
     public List<Orders> findToUser(int uid) {
         return ordersDao.findToUser(uid);
     }
 
+    /**
+     * 用户取消订单
+     * @param oid
+     */
     @Override
     public void cancelOrders(String oid) {
         ordersDao.cancelOrders(oid);
+    }
+
+    /**
+     * 用户评论完修改订单状态
+     * @param oid
+     */
+    @Override
+    public void updateStatus(String oid) {
+        ordersDao.updateStatus(oid);
+    }
+
+    /**
+     * 根据时间修改订单状态为已完成
+     * @param oid
+     */
+    @Override
+    public void updateStatusTime(String oid) {
+        ordersDao.updateStatusTime(oid);
     }
 }

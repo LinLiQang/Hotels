@@ -2,7 +2,9 @@ package good.controller;
 
 import com.github.pagehelper.PageInfo;
 import good.domain.Comments;
+import good.domain.Orders;
 import good.service.ICommentsService;
+import good.service.IOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,9 @@ public class CommentsController {
 
     @Autowired
     private ICommentsService commentsService;
+
+    @Autowired
+    private IOrdersService ordersService;
 
     /**管理员操作**/
 
@@ -111,15 +116,29 @@ public class CommentsController {
 
     /**用户操作**/
 
+    /**
+     * 前台用户进行评论
+     * @param comments
+     * @return
+     */
     @RequestMapping("/toComment")
     @ResponseBody
     public Map<String, Object> toComment(Comments comments){
         Map<String, Object> map = new HashMap<>();
-        comments.setCommentTime(new Date());
-        commentsService.addComments(comments);
-        map.put("flag", true);
-        map.put("msg", "评论成功！");
-        return map;
+        System.out.println(comments.getComment());
+        System.out.println(comments.getStar());
+        if(!comments.getComment().isEmpty() && comments.getStar() >0){
+            comments.setCommentTime(new Date());
+            commentsService.addComments(comments);
+            ordersService.updateStatus(comments.getOid());
+            map.put("flag", true);
+            map.put("msg", "评论成功！");
+            return map;
+        }else{
+            map.put("flag", false);
+            map.put("msg", "未评论！");
+            return map;
+        }
     }
 
     /**用户操作**/

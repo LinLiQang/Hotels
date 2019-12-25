@@ -5,6 +5,7 @@ import good.domain.Orders;
 import good.domain.Room;
 import good.domain.User;
 import org.apache.ibatis.annotations.*;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -74,6 +75,7 @@ public interface ICommentsDao {
             @Result(id = true, property = "cid", column = "cid"),
             @Result(property = "comment", column = "comment"),
             @Result(property = "commentTime", column = "commentTime"),
+            @Result(property = "star", column = "star"),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById")),
             @Result(property = "room", column = "rid", javaType = Room.class, one = @One(select = "good.dao.IRoomDao.findById")),
             @Result(property = "orders", column = "oid", javaType = Orders.class, one = @One(select = "good.dao.IOrdersDao.findById"))
@@ -85,11 +87,12 @@ public interface ICommentsDao {
      * @param rid
      * @return
      */
-    @Select("select * from comments where rid = #{rid}")
+    @Select("select * from comments where rid = #{rid} order by star desc")
     @Results({
             @Result(id = true, property = "cid", column = "cid"),
             @Result(property = "comment", column = "comment"),
             @Result(property = "commentTime", column = "commentTime"),
+            @Result(property = "star", column = "star"),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
     })
     List<Comments> findByRidToRoom(String rid);
@@ -98,6 +101,6 @@ public interface ICommentsDao {
      * 添加评论
      * @param comments
      */
-    @Insert("insert into comments(comment,commentTime,uid,rid,oid) values(#{comment},#{commentTime},#{uid},#{rid},#{oid})")
+    @Insert("insert into comments(comment,commentTime,star,uid,rid,oid) values(#{comment},#{commentTime},#{star},#{uid},#{rid},#{oid})")
     void addComments(Comments comments);
 }

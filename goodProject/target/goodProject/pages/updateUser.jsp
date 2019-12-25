@@ -90,15 +90,15 @@
         }
 
         //校验密码
-        function checkIDcard(){
-            var IDcard = $("#IDcard").val();
-            var reg_IDcard = /^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9X]$/;
-            var flag = reg_IDcard.test(IDcard);
+        function checkIdCard(){
+            var idCard = $("#idCard").val();
+            var reg_idCard = /^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9X]$/;
+            var flag = reg_idCard.test(idCard);
             if(flag){
-                $("#IDcard").css("border","2px solid green");
+                $("#idCard").css("border","2px solid green");
                 flag = true;
             }else{
-                $("#IDcard").css("border","2px solid red");
+                $("#idCard").css("border","2px solid red");
             }
             return flag;
         }
@@ -134,7 +134,7 @@
             $("#tel").blur(checkTel);
             $("#name").blur(checkName);
             $("#password").blur(checkPassword);
-            $("#IDcard").blur(checkIDcard);
+            $("#idCard").blur(checkIdCard);
         });
     </script>
 
@@ -190,7 +190,7 @@
 
                             <div class="col-md-2 title">身份证号</div>
                             <div class="col-md-4 data">
-                                <input type="text" id="IDcard" class="form-control" value="${user.IDcard}" name="IDcard">
+                                <input type="text" id="idCard" class="form-control" value="${user.idCard}" name="idCard">
                             </div>
 
                             <div class="col-md-2 title">性别</div>
@@ -232,17 +232,13 @@
                                     <c:if test="${user.userStatus == 0}">
                                         <option value="0" selected="selected">封禁</option>
                                         <option value="1">普通用户</option>
-                                        <option value="2">尊贵会员</option>
                                     </c:if>
                                     <c:if test="${user.userStatus == 1}">
                                         <option value="0">封禁</option>
                                         <option value="1" selected="selected">普通用户</option>
-                                        <option value="2">尊贵会员</option>
                                     </c:if>
                                     <c:if test="${user.userStatus == 2}">
-                                        <option value="0">封禁</option>
-                                        <option value="1">普通用户</option>
-                                        <option value="2" selected="selected">尊贵会员</option>
+                                        <option value="2" selected="selected">管理员</option>
                                     </c:if>
                                 </select>
                             </div>

@@ -117,6 +117,7 @@ public interface IOrdersDao {
             @Result(property = "ordersStatus", column = "ordersStatus"),
             @Result(property = "startTime", column = "startTime"),
             @Result(property = "rid", column = "rid"),
+            @Result(property = "uid", column = "uid"),
             @Result(property = "type", column = "rid",javaType = int.class, one = @One(select = "good.dao.IRoomDao.findToType")),
             @Result(property = "firstImg", column = "rid", javaType = String.class, one = @One(select = "good.dao.IRoomImgDao.findFirstImg")),
             @Result(property = "user", column = "uid", javaType = User.class, one = @One(select = "good.dao.IUserDao.findById"))
@@ -136,4 +137,18 @@ public interface IOrdersDao {
      */
     @Update("update orders set ordersStatus = 0 where oid = #{oid}")
     void cancelOrders(String oid);
+
+    /**
+     * 修改订单状态为已评论
+     * @param oid
+     */
+    @Update("update orders set ordersStatus = 3 where oid = #{oid}")
+    void updateStatus(String oid);
+
+    /**
+     * 修改订单状态为已完成
+     * @param oid
+     */
+    @Update("update orders set ordersStatus = 2 where oid = #{oid}")
+    void updateStatusTime(String oid);
 }
