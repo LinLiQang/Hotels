@@ -51,7 +51,7 @@ public interface IUserDao {
      * 修改用户信息
      * @param user
      */
-    @Update("update user set name = #{name}, username = #{username}, avatar = #{avatar}, sex = #{sex}, tel = #{tel} WHERE uid = #{uid}")
+    @Update("update user set name = #{name}, username = #{username}, avatar = #{avatar}, userStatus = #{userStatus}, sex = #{sex}, tel = #{tel} WHERE uid = #{uid}")
     void editUser(User user);
 
     /**

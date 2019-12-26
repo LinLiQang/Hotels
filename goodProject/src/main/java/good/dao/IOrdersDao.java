@@ -128,7 +128,7 @@ public interface IOrdersDao {
      * 为了查询可用房间查询所有订单
      * @return
      */
-    @Select("select * from orders ")
+    @Select("select * from orders")
     List<Orders> findAllToOrders();
 
     /**

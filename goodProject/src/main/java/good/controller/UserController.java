@@ -482,8 +482,10 @@ public class UserController {
         List<Orders> updateTimeOrders = ordersService.findAllToOrders();
         Date date = new Date();
         for(Orders order : updateTimeOrders){
-            if(order.getEndTime().compareTo(date) <= 0){
-                ordersService.updateStatusTime(order.getOid());
+            if(order.getOrdersStatus() == 1) {
+                if (order.getEndTime().compareTo(date) <= 0) {
+                    ordersService.updateStatusTime(order.getOid());
+                }
             }
         }
         //从数据库中找出所有订单

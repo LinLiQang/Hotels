@@ -46,8 +46,10 @@ public class OrdersController {
         List<Orders> updateTimeOrders = ordersService.findAllToOrders();
         Date date = new Date();
         for(Orders order : updateTimeOrders){
-            if(order.getEndTime().compareTo(date) <= 0){
-                ordersService.updateStatusTime(order.getOid());
+            if(order.getOrdersStatus() == 1) {
+                if (order.getEndTime().compareTo(date) <= 0) {
+                    ordersService.updateStatusTime(order.getOid());
+                }
             }
         }
 
